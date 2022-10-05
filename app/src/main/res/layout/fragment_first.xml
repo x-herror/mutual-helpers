@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragmentFirstRecyclerView"
         android:layout_width="wrap_content"

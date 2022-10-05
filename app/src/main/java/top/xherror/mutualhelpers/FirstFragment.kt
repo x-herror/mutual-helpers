@@ -1,10 +1,17 @@
 package top.xherror.mutualhelpers
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,9 +24,28 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class FirstFragment : Fragment() {
+    private val itemList=ArrayList<Item>()
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    /*
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (event.targetState == Lifecycle.State.CREATED) {
+                    val fragmentFirstRecyclerView: RecyclerView =requireView().findViewById(R.id.fragmentFirstRecyclerView)
+                    val layoutManager= LinearLayoutManager(requireActivity())
+                    fragmentFirstRecyclerView.layoutManager=layoutManager
+                    fragmentFirstRecyclerView.adapter=FirstAdapter(itemList)
+                    lifecycle.removeObserver(this)
+                }
+            }
+        })
+
+    }
+    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +60,14 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        itemList.add(Item("Xherror",R.drawable.example,"SJTU","2022/10/5"))
+        //return inflater.inflate(R.layout.fragment_first, container, false)
+        val view=inflater.inflate(R.layout.fragment_first, container, false)
+        val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentFirstRecyclerView)
+        val layoutManager= LinearLayoutManager(requireActivity())
+        fragmentFirstRecyclerView.layoutManager=layoutManager
+        fragmentFirstRecyclerView.adapter=FirstAdapter(itemList)
+        return  view
     }
 
     companion object {
