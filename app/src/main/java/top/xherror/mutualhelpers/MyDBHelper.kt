@@ -15,7 +15,7 @@ class MyDBHelper(val context: Context, val name:String, val version:Int):
     putExtra("time",time)
      */
     private val createMyItems=
-        "CREATE table MyItems(id integer primary key autoincrement,name string,image blob,location string,time string)"
+        "CREATE table MyItems(id integer primary key autoincrement,name string,imagePath string,location string,time string)"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(createMyItems)

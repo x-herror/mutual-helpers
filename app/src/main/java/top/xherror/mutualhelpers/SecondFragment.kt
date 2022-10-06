@@ -59,7 +59,7 @@ class SecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        itemList.add(Item("herror",R.drawable.example,"SJTU","2022/10/5"))
+        //itemList.add(Item("herror",R.drawable.example,"SJTU","2022/10/5"))
         val view=inflater.inflate(R.layout.fragment_second, container, false)
         val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentSecondRecyclerView)
         val layoutManager= LinearLayoutManager(requireActivity())
