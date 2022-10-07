@@ -1,16 +1,26 @@
 package top.xherror.mutualhelpers
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,13 +37,49 @@ class SecondFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val adapter=SecondAdapter(itemList)
 
+    fun addItem(item:Item){
+        itemList.add(item)
+        adapter.notifyItemInserted(itemList.size-1)
+    }
+
+
+    fun removeItem(item:Item){
+        itemList.remove(item)
+        adapter.notifyItemRemoved(itemList.size-1)
+    }
+
+    @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
+        cursor.use {
+            if (it.moveToFirst()){
+                do{
+                    val name=it.getString(it.getColumnIndex("name"))
+                    val imagePath=it.getString(it.getColumnIndex("imagePath"))
+                    var bitmap: Bitmap?=null
+                    if (imagePath!=""){
+                        Log.d("TTT",imagePath)
+                        //val fis = FileInputStream(imagePath)
+                        //val fis= getClassLoader().getResourceAsStream(imagePath)
+                        //Log.d("TTT",fis.toString())
+                        bitmap = BitmapFactory.decodeFile(imagePath)
+                    }
+                    val location=it.getString(it.getColumnIndex("location"))
+                    val time=it.getString(it.getColumnIndex("time"))
+                    val owner=it.getString(it.getColumnIndex("owner"))
+                    if (owner=="xherror"){itemList.add(Item(name, bitmap,location,time))}
+
+                } while (cursor.moveToNext())
+            }
+        }
+
     }
 
     /*
@@ -64,7 +110,7 @@ class SecondFragment : Fragment() {
         val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentSecondRecyclerView)
         val layoutManager= LinearLayoutManager(requireActivity())
         fragmentFirstRecyclerView.layoutManager=layoutManager
-        fragmentFirstRecyclerView.adapter=FirstAdapter(itemList)
+        fragmentFirstRecyclerView.adapter=adapter
         return  view
     }
 
@@ -87,4 +133,60 @@ class SecondFragment : Fragment() {
                 }
             }
     }
+
+    inner class SecondAdapter(val itemList: List<Item>) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
+
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val itemImage: ImageView = view.findViewById(R.id.itemImage)
+            val itemName: TextView = view.findViewById(R.id.itemName)
+            val itemLocation: TextView = view.findViewById(R.id.itemLocation)
+            val itemTime: TextView = view.findViewById(R.id.itemTime)
+            val myItemDeleteButton: Button =view.findViewById(R.id.myItemDeleteButton)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.myitem, parent, false)
+            val viewHolder = ViewHolder(view)
+            viewHolder.itemView.setOnClickListener {
+                val position = viewHolder.adapterPosition
+                val item = itemList[position]
+                Toast.makeText(parent.context, "you clicked ${item.name}", Toast.LENGTH_SHORT).show()
+                actionStart(parent.context,item.name,item.bitmap,item.location,item.time)
+            }
+            viewHolder.myItemDeleteButton.setOnClickListener {
+                val position = viewHolder.adapterPosition
+                val item = itemList[position]
+                val selectDialog = AlertDialog.Builder(parent.context).run {
+                    setTitle("This is a alert dialog!")
+                    setMessage("FBI WARNING!")
+                    setCancelable(false)
+                    setPositiveButton("OK"){
+                            dialog,which->
+                        dbHelper.writableDatabase.delete("MyItems","name=?", arrayOf(item.name))
+                        removeItem(item)
+                        val activity=activity as MainActivity
+                        activity.getFirstFragment().removeItem(item)
+
+                    }
+                    setNegativeButton("Cancel"){
+                            dialog,which->
+                    }
+                    show()
+                }
+            }
+            return viewHolder
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val item = itemList[position]
+            holder.itemImage.setImageBitmap(item.bitmap)
+            holder.itemName.text = item.name
+            holder.itemLocation.text=item.location
+            holder.itemTime.text=item.time
+        }
+
+        override fun getItemCount() = itemList.size
+    }
+
+
 }

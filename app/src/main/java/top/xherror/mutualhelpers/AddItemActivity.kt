@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
@@ -128,6 +129,7 @@ class AddItemActivity : AppCompatActivity() {
             val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
             val date=Date(System.currentTimeMillis())
             val name=binding.activityAddItemEditTextName.text.toString()
+            val owner="xherror"
             val location=binding.activityAddItemEditTextLocation.text.toString()
             var imagePath=""
             if (name!=""&&location!=""){
@@ -140,11 +142,18 @@ class AddItemActivity : AppCompatActivity() {
                     Log.d("Save Bitmap", "Save Path=$imagePath")
                 }
                 dbHelper.writableDatabase.run {
-                    execSQL("INSERT INTO MyItems(name,imagePath,location,time) VALUES(?,?,?,?)", arrayOf(name,imagePath,location,time))
+                    execSQL("INSERT INTO MyItems(name,imagePath,location,time,owner) VALUES(?,?,?,?,?)", arrayOf(name,imagePath,location,time,owner))
                 }
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
                 val intent=Intent()
-                intent.putExtra("isGo",true)
+                intent.run {
+                    putExtra("isGo",true)
+                    putExtra("name",name)
+                    putExtra("imagePath",imagePath)
+                    putExtra("location",location)
+                    putExtra("time",time)
+                    putExtra("owner",owner)
+                }
                 setResult(RESULT_OK,intent)
                 finish()
             }else{
