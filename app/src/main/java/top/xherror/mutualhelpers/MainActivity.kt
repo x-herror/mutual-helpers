@@ -1,23 +1,29 @@
 package top.xherror.mutualhelpers
 
-import android.R.attr.button
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import top.xherror.mutualhelpers.databinding.ActivityMainBinding
+import kotlin.math.log
 
 
 @SuppressLint("StaticFieldLeak")
 val dbHelper=MyDBHelper(MyApplication.getContext(),"Items.db",1)
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
     val firstFragment=FirstFragment()
+
+
+    override fun testData() {
+        Toast.makeText(this, "CallBack", Toast.LENGTH_SHORT).show()
+    }
+
 
     @JvmName("getFirstFragment1")
     fun getFirstFragment():FirstFragment{
@@ -25,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         //adapter.notifyItemInserted(chatList.size-1)
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
@@ -36,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         binding.buttonToSecond.setOnClickListener {
             replaceFragment(SecondFragment())
         }
-
+        val fragment=supportFragmentManager.findFragmentById(R.id.fragmentFirst)
         val toAddItemActivity= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             when(it.resultCode){
                 RESULT_OK -> {
@@ -81,6 +88,10 @@ class MainActivity : AppCompatActivity() {
         })
 
         replaceFragment(firstFragment)
+    }
+
+    fun test(){
+        Log.d("TTT","TTTTTTTTTT")
     }
 
     private fun replaceFragment(fragment: Fragment) {

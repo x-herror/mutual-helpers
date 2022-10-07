@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import java.io.FileInputStream
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -57,11 +55,14 @@ class FirstFragment : Fragment() {
     fun removeItem(objectItem:Item){
         Log.d("itemList change","remove ${objectItem.toString()} from itemList :${itemList[0].toString()}")
         //itemList.remove(item)
-        for (item in itemList){
+        var position=-1
+        for (i in 0 until itemList.size){
+            val item=itemList[i]
             if (item.name==objectItem.name&&item.time==objectItem.time&&item.location==objectItem.location){
-                itemList.remove(item)
+                position=i
             }
         }
+        if (position>=0){itemList.removeAt(position)}
         adapter.notifyItemRemoved(itemList.size-1)
     }
 
@@ -72,23 +73,23 @@ class FirstFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
         val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
         cursor.use {
             if (it.moveToFirst()){
                 do{
+
                     val name=it.getString(it.getColumnIndex("name"))
                     val imagePath=it.getString(it.getColumnIndex("imagePath"))
                     var bitmap:Bitmap?=null
                     if (imagePath!=""){
-                        Log.d("TTT",imagePath)
-                        //val fis = FileInputStream(imagePath)
-                        //val fis= getClassLoader().getResourceAsStream(imagePath)
-                        //Log.d("TTT",fis.toString())
-                        bitmap = BitmapFactory.decodeFile(imagePath)
+                        bitmap=Utils.getBitmap(imagePath)
                     }
                     val location=it.getString(it.getColumnIndex("location"))
                     val time=it.getString(it.getColumnIndex("time"))
                     itemList.add(Item(name, bitmap,location,time))
+                    val activity=activity as MainActivity
+
                 } while (cursor.moveToNext())
             }
         }
@@ -105,13 +106,19 @@ class FirstFragment : Fragment() {
         val view=inflater.inflate(R.layout.fragment_first, container, false)
 
         val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentFirstRecyclerView)
-
         //val layoutManager= LinearLayoutManager(requireActivity())
         val layoutManager=StaggeredGridLayoutManager(2,     StaggeredGridLayoutManager.VERTICAL)
         fragmentFirstRecyclerView.layoutManager=layoutManager
-
         fragmentFirstRecyclerView.adapter=adapter
         return  view
+    }
+
+    interface TestDataCallback {
+        fun testData()
+    }
+
+    fun setCallBack(testDataCallback: TestDataCallback){
+        testDataCallback.testData()
     }
 
     companion object {
@@ -134,3 +141,4 @@ class FirstFragment : Fragment() {
             }
     }
 }
+

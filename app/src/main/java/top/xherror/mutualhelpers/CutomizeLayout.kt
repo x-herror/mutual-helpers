@@ -17,6 +17,10 @@ class Item(val name:String,val bitmap:Bitmap?,val location:String,val time:Strin
 
 class FirstAdapter(val itemList: List<Item>) : RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
 
+    fun test(){
+
+    }
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemImage: ImageView = view.findViewById(R.id.itemImage)
         val itemName: TextView = view.findViewById(R.id.itemName)

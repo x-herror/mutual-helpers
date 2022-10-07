@@ -65,11 +65,7 @@ class SecondFragment : Fragment() {
                     val imagePath=it.getString(it.getColumnIndex("imagePath"))
                     var bitmap: Bitmap?=null
                     if (imagePath!=""){
-                        Log.d("TTT",imagePath)
-                        //val fis = FileInputStream(imagePath)
-                        //val fis= getClassLoader().getResourceAsStream(imagePath)
-                        //Log.d("TTT",fis.toString())
-                        bitmap = BitmapFactory.decodeFile(imagePath)
+                        bitmap=Utils.getBitmap(imagePath)
                     }
                     val location=it.getString(it.getColumnIndex("location"))
                     val time=it.getString(it.getColumnIndex("time"))

@@ -65,7 +65,9 @@ class AddItemActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         // 拉起相机回调data为null，打开相册回调不为null
                         if (it.data == null && imgPath.isNotEmpty()) {
-                            Glide.with(this).load(imgPath).skipMemoryCache(true)
+                            Glide.with(this)
+                                .load(imgPath)
+                                .skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .into(binding.ivHelpImageFirst)
                             //binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
@@ -77,7 +79,11 @@ class AddItemActivity : AppCompatActivity() {
                             //Log.d("data_return", it.data!!.data.toString())
                             //TODO:it.data!!.data
                             it.data!!.data?.let { it1->
-                                Glide.with(this).load(it1).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(binding.ivHelpImageFirst)
+                                Glide.with(this)
+                                    .load(it1)
+                                    .skipMemoryCache(true)
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                    .into(binding.ivHelpImageFirst)
                                 bitmap=getBitmapFromUri(it1)
                                 //Log.d("TTT",bitmap.toString())
                             }
@@ -96,7 +102,7 @@ class AddItemActivity : AppCompatActivity() {
                 LayoutInflater.from(this).inflate(R.layout.dialog_choose_pic_type, null)
             val selectDialog =
                 AlertDialog.Builder(this).setView(chooseTypeView).setCancelable(true).create()
-            Objects.requireNonNull(selectDialog.window)!!.setBackgroundDrawableResource(R.color.transparent)
+            //Objects.requireNonNull(selectDialog.window)!!.setBackgroundDrawableResource(R.color.transparent)
 
 
 
@@ -110,8 +116,6 @@ class AddItemActivity : AppCompatActivity() {
                 selectDialog.dismiss()
                 // 打开相册
                 val gallery = Intent(Intent.ACTION_PICK)
-                gallery.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                gallery.flags = Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 toGalleryActivity.launch(gallery)
             }
@@ -187,11 +191,16 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     fun saveBitmap(name: String, bm: Bitmap, mContext: Context) {
+
         Log.d("Save Bitmap", "Ready to save picture")
         //指定我们想要存储文件的地址
         val targetPath = mContext.filesDir.toString() + "/images/"
         Log.d("Save Bitmap", "Save Path=$targetPath")
-        //TODO:判断指定文件夹的路径是否存在
+        //
+        val file = File(targetPath)
+        if (file.exists()) {} else {
+            file.mkdirs()
+        }
         //如果指定文件夹创建成功，那么我们则需要进行图片存储操作
         val saveFile = File(targetPath, name)
         try {
