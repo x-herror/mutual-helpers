@@ -10,7 +10,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.FileUtils
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,17 +22,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
 import top.xherror.mutualhelpers.databinding.DialogChoosePicTypeBinding
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
 
 
 private const val RESULT_LOAD_IMAGE = 1
@@ -97,6 +94,27 @@ class AddItemActivity : AppCompatActivity() {
                 }
             }
 
+
+        val toCameraActivity =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                when (it.resultCode) {
+                    RESULT_OK -> {
+                        // 拉起相机回调data为null，打开相册回调不为null
+                            //val bitmap=BitmapFactory.decodeStream()
+                            Glide.with(this)
+                                .load(imgPath)
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .into(binding.ivHelpImageFirst)
+                            binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
+                            //binding.ivHelpImageSecond.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        Log.d("data_return", it.resultCode.toString())
+                    }
+                }
+            }
+
         binding.ivHelpImageFirst.setOnClickListener {
             val chooseTypeView =
                 LayoutInflater.from(this).inflate(R.layout.dialog_choose_pic_type, null)
@@ -106,11 +124,14 @@ class AddItemActivity : AppCompatActivity() {
 
 
 
-            //dialogChoosePicTypeBinding.tvChoosePicCamera.setOnClickListener {
-            //    selectDialog.dismiss()
-            //    // 拉起相机
-            //    //openCamera(type)
-            //}
+            val cameraButton:TextView=chooseTypeView.findViewById(R.id.tv_choose_pic_camera)
+            cameraButton.setOnClickListener {
+                selectDialog.dismiss()
+                // 拉起相机
+                toCameraActivity.launch(openCamera())
+            }
+
+
             val galleryButton:TextView=chooseTypeView.findViewById(R.id.tv_choose_pic_gallery)
             galleryButton.setOnClickListener {
                 selectDialog.dismiss()
@@ -122,7 +143,6 @@ class AddItemActivity : AppCompatActivity() {
 
             val cancelButton:TextView=chooseTypeView.findViewById(R.id.tv_choose_pic_cancel)
             cancelButton.setOnClickListener {
-                Log.d("TTT","TTT")
                 selectDialog.dismiss()
             }
             selectDialog.show()
@@ -224,6 +244,50 @@ class AddItemActivity : AppCompatActivity() {
             //file.mkdirs() 创建文件夹的意思
             file.mkdirs()
         }
+    }
+
+
+    private fun openCamera():Intent{
+        // 创建照片存储目录
+        val targetPath = "$filesDir/camera/"
+        val imgDir: File = File(targetPath)
+        if (imgDir.exists()) {} else {
+            imgDir.mkdirs()
+        }
+        // 创建照片
+        val photoName = System.currentTimeMillis().toString() + ".png"
+        val picture = File(imgDir, photoName)
+        if (!picture.exists()) {
+            try {
+                picture.createNewFile()
+            } catch (e: IOException) {
+                Log.d("TTT","create images error")
+            }
+        }
+        imgPath = picture.absolutePath
+        // 调用相机拍照
+        val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        camera.putExtra(
+            MediaStore.EXTRA_OUTPUT,
+            FileProvider.getUriForFile(this, "top.xherror.mutualhelpers.fileprovider", picture)
+        )
+        return camera
+    }
+
+    fun getFilePath(dir: String): String? {
+        val path: String
+        // 判断是否有外部存储，是否可用
+        path = if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+            getExternalFilesDir(dir)!!.absolutePath
+        } else {
+            // 使用内部储存
+            filesDir.toString() + File.separator + dir
+        }
+        val file = File(path)
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+        return path
     }
 
     /*
