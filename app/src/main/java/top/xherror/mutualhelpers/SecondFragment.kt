@@ -116,18 +116,19 @@ class SecondFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val item = itemList[position]
                 val selectDialog = AlertDialog.Builder(parent.context).run {
-                    setTitle("This is a alert dialog!")
-                    setMessage("FBI WARNING!")
+                    setTitle("DELETE!")
+                    setMessage("确定删除?")
                     setCancelable(false)
-                    setPositiveButton("OK"){
+                    setPositiveButton("删除!"){
                             dialog,which->
+                        //TODO:remove pictures!
                         dbHelper.writableDatabase.delete("MyItems","name=?", arrayOf(item.name))
                         removeItem(item)
                         val activity=activity as MainActivity
                         activity.getFirstFragment().removeItem(item)
 
                     }
-                    setNegativeButton("Cancel"){
+                    setNegativeButton("算了."){
                             dialog,which->
                     }
                     show()
