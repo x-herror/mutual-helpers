@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
+        val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.buttonToFirst.setOnClickListener {

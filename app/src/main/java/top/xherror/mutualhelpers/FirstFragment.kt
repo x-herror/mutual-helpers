@@ -30,23 +30,7 @@ class FirstFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private val adapter=FirstAdapter(itemList)
-    /*
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        requireActivity().lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                if (event.targetState == Lifecycle.State.CREATED) {
-                    val fragmentFirstRecyclerView: RecyclerView =requireView().findViewById(R.id.fragmentFirstRecyclerView)
-                    val layoutManager= LinearLayoutManager(requireActivity())
-                    fragmentFirstRecyclerView.layoutManager=layoutManager
-                    fragmentFirstRecyclerView.adapter=FirstAdapter(itemList)
-                    lifecycle.removeObserver(this)
-                }
-            }
-        })
 
-    }
-    */
     fun addItem(item:Item){
         itemList.add(item)
         adapter.notifyItemInserted(itemList.size-1)
@@ -73,26 +57,7 @@ class FirstFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
-        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
-        cursor.use {
-            if (it.moveToFirst()){
-                do{
-                    val name=it.getString(it.getColumnIndex("name"))
-                    val imagePath=it.getString(it.getColumnIndex("imagePath"))
-                    val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
-                    var bitmap:Bitmap?=null
-                    if (imagePath!=""){
-                        bitmap=Utils.getBitmap(imagePath,chooseOption)
-                    }
-                    val location=it.getString(it.getColumnIndex("location"))
-                    val time=it.getString(it.getColumnIndex("time"))
-                    itemList.add(Item(name, bitmap,location,time))
-                    val activity=activity as MainActivity
-
-                } while (cursor.moveToNext())
-            }
-        }
+        Utils.fillItemList(itemList)
     }
 
 
@@ -100,13 +65,9 @@ class FirstFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        //itemList.add(Item("Xherror",R.drawable.example,"SJTU","2022/10/5"))
-        //return inflater.inflate(R.layout.fragment_first, container, false)
         val view=inflater.inflate(R.layout.fragment_first, container, false)
 
         val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentFirstRecyclerView)
-        //val layoutManager= LinearLayoutManager(requireActivity())
         val layoutManager=StaggeredGridLayoutManager(2,     StaggeredGridLayoutManager.VERTICAL)
         fragmentFirstRecyclerView.layoutManager=layoutManager
         fragmentFirstRecyclerView.adapter=adapter

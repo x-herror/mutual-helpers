@@ -42,28 +42,7 @@ class ThirdFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
-        cursor.use {
-            if (it.moveToFirst()){
-                do{
-                    val name=it.getString(it.getColumnIndex("name"))
-                    Log.d("TTT","name: $name")
-                    Log.d("TTT","searchString: $searchString")
-                    if (searchString in name){
-                        val imagePath=it.getString(it.getColumnIndex("imagePath"))
-                        val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
-                        var bitmap:Bitmap?=null
-                        if (imagePath!=""){
-                            bitmap=Utils.getBitmap(imagePath,chooseOption)
-                        }
-                        val location=it.getString(it.getColumnIndex("location"))
-                        val time=it.getString(it.getColumnIndex("time"))
-                        itemList.add(Item(name, bitmap,location,time))
-                    }
-
-                } while (cursor.moveToNext())
-            }
-        }
+        Utils.fillItemList(itemList,3,searchString)
     }
 
     override fun onCreateView(

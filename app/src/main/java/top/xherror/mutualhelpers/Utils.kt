@@ -1,5 +1,6 @@
 package top.xherror.mutualhelpers
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -85,7 +86,43 @@ object Utils {
         return bitmap
     }
 
-    fun fillItemList(itemList: ArrayList<Item>){
+    @SuppressLint("Range")
+    fun fillItemList(itemList: ArrayList<Item>,type:Int=1,searchString:String=""){
+        //id PK auto int,name string,imagePath string,location string
+        //time string,phone string,owner string,description string
+        //chooseOption integer
+        //TODO:cache query result
+        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
+        cursor.use {
+            if (it.moveToFirst()){
+                do{
+                    val id=it.getInt(it.getColumnIndex("id"))
+                    val name=it.getString(it.getColumnIndex("name"))
+                    val imagePath=it.getString(it.getColumnIndex("imagePath"))
+                    val location=it.getString(it.getColumnIndex("location"))
+                    val time=it.getString(it.getColumnIndex("time"))
+                    val phone=it.getString(it.getColumnIndex("phone"))
+                    val owner=it.getString(it.getColumnIndex("owner"))
+                    val description=it.getString(it.getColumnIndex("description"))
+                    val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
+                    var bitmap:Bitmap?=null
+                    if (imagePath!=""){
+                        bitmap=Utils.getBitmap(imagePath,chooseOption)
+                    }
+                    when (type){
+                        1 ->{
+                            itemList.add(Item(name, bitmap,location,time))
+                        }
+                        2 ->{
+                            if (owner=="xherror"){itemList.add(Item(name, bitmap,location,time))}
+                        }
+                        3 ->{
+                            if (searchString in name||searchString in description||name in searchString){itemList.add(Item(name, bitmap,location,time))}
+                        }
+                    }
 
+                } while (cursor.moveToNext())
+            }
+        }
     }
 }

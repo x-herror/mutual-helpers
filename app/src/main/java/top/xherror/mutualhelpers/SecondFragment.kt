@@ -57,45 +57,8 @@ class SecondFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
-        cursor.use {
-            if (it.moveToFirst()){
-                do{
-                    val name=it.getString(it.getColumnIndex("name"))
-                    val imagePath=it.getString(it.getColumnIndex("imagePath"))
-                    val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
-                    var bitmap:Bitmap?=null
-                    if (imagePath!=""){
-                        bitmap=Utils.getBitmap(imagePath,chooseOption)
-                    }
-                    val location=it.getString(it.getColumnIndex("location"))
-                    val time=it.getString(it.getColumnIndex("time"))
-                    val owner=it.getString(it.getColumnIndex("owner"))
-                    if (owner=="xherror"){itemList.add(Item(name, bitmap,location,time))}
-
-                } while (cursor.moveToNext())
-            }
-        }
-
+        Utils.fillItemList(itemList,2)
     }
-
-    /*
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        requireActivity().lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                if (event.targetState == Lifecycle.State.CREATED) {
-                    val fragmentFirstRecyclerView: RecyclerView =requireView().findViewById(R.id.fragmentFirstRecyclerView)
-                    val layoutManager= LinearLayoutManager(requireActivity())
-                    fragmentFirstRecyclerView.layoutManager=layoutManager
-                    fragmentFirstRecyclerView.adapter=FirstAdapter(itemList)
-                    lifecycle.removeObserver(this)
-                }
-            }
-        })
-
-    }
-    */
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,7 +110,6 @@ class SecondFragment : Fragment() {
             viewHolder.itemView.setOnClickListener {
                 val position = viewHolder.adapterPosition
                 val item = itemList[position]
-                Toast.makeText(parent.context, "you clicked ${item.name}", Toast.LENGTH_SHORT).show()
                 actionStart(parent.context,item.name,item.bitmap,item.location,item.time)
             }
             viewHolder.myItemDeleteButton.setOnClickListener {

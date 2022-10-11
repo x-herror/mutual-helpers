@@ -34,7 +34,6 @@ class FirstAdapter(val itemList: List<Item>) : RecyclerView.Adapter<FirstAdapter
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val item = itemList[position]
-            Toast.makeText(parent.context, "you clicked ${item.name}", Toast.LENGTH_SHORT).show()
             actionStart(parent.context,item.name,item.bitmap,item.location,item.time)
         }
         return viewHolder

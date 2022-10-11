@@ -5,17 +5,19 @@ import android.content.Intent
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import top.xherror.mutualhelpers.databinding.ActivityItemBinding
+import top.xherror.mutualhelpers.databinding.ActivityMainBinding
 
 class ItemActivity : AppCompatActivity() {
     /*
     val name:String,val imageId:Int,val location:String,val time:String
      */
     companion object {
+        //TODO:use unique id replace this
         fun actionStart(context: Context, name:String, bitmap: Bitmap?,location:String,time:String){
             val intent = Intent(context,ItemActivity::class.java)
             intent.run {
                 putExtra("name",name)
-                putExtra("bitmap",bitmap)
                 putExtra("location",location)
                 putExtra("time",time)
             }
@@ -23,10 +25,18 @@ class ItemActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item)
+        val binding = ActivityItemBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val name=intent.getStringExtra("name")
+        val location=intent.getStringExtra("location")
+        val time=intent.getStringExtra("time")
+
+        binding.activityItemEditTextName.text=name
+        binding.activityItemEditTextLocation.text=location
+        binding.activityItemEditTextTime.text=time
+
     }
 }
