@@ -51,9 +51,10 @@ class ThirdFragment : Fragment() {
                     Log.d("TTT","searchString: $searchString")
                     if (searchString in name){
                         val imagePath=it.getString(it.getColumnIndex("imagePath"))
-                        var bitmap: Bitmap?=null
+                        val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
+                        var bitmap:Bitmap?=null
                         if (imagePath!=""){
-                            bitmap=Utils.getBitmap(imagePath)
+                            bitmap=Utils.getBitmap(imagePath,chooseOption)
                         }
                         val location=it.getString(it.getColumnIndex("location"))
                         val time=it.getString(it.getColumnIndex("time"))
@@ -75,7 +76,7 @@ class ThirdFragment : Fragment() {
         val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentFirstRecyclerView)
 
         //val layoutManager= LinearLayoutManager(requireActivity())
-        val layoutManager= StaggeredGridLayoutManager(2,     StaggeredGridLayoutManager.VERTICAL)
+        val layoutManager= StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
         fragmentFirstRecyclerView.layoutManager=layoutManager
 
         fragmentFirstRecyclerView.adapter=adapter

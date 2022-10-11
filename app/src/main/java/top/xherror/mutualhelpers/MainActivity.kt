@@ -11,14 +11,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import top.xherror.mutualhelpers.databinding.ActivityMainBinding
+import java.io.BufferedInputStream
+import java.io.FileInputStream
 import kotlin.math.log
 
 
 @SuppressLint("StaticFieldLeak")
 val dbHelper=MyDBHelper(MyApplication.getContext(),"Items.db",1)
 class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
-    val firstFragment=FirstFragment()
-
+    private val tag="MainActivity"
+    private val firstFragment=FirstFragment()
+    private val secondFragment=SecondFragment()
 
     override fun testData() {
         Toast.makeText(this, "CallBack", Toast.LENGTH_SHORT).show()
@@ -31,8 +34,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        //adapter.notifyItemInserted(chatList.size-1)
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
         setContentView(binding.root)
@@ -40,27 +41,30 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
         binding.buttonToFirst.setOnClickListener {
             replaceFragment(firstFragment)
         }
+
         binding.buttonToSecond.setOnClickListener {
-            replaceFragment(SecondFragment())
+            replaceFragment(secondFragment)
         }
-        val fragment=supportFragmentManager.findFragmentById(R.id.fragmentFirst)
+
         val toAddItemActivity= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             when(it.resultCode){
                 RESULT_OK -> {
                     it.data?.let {
                         val isGo=it.getBooleanExtra("isGo",false)
+                        val chooseOption=it.getIntExtra("chooseOption",-1)
                         val name=it.getStringExtra("name")
                         val imagePath=it.getStringExtra("imagePath")
                         val location=it.getStringExtra("location")
                         val time=it.getStringExtra("time")
-                        val owner=it.getStringExtra("owner")
                         var bitmap:Bitmap?=null
                         if (imagePath!=""){
-                            bitmap = BitmapFactory.decodeFile(imagePath)
+                            bitmap=Utils.getBitmap(imagePath!!,chooseOption)
                         }
+                        Log.d(tag,"return from add item activity")
+                        Log.d(tag,"bitmap:${bitmap.toString()}")
                         if (isGo){
                             firstFragment.addItem(Item(name!!,bitmap,location!!,time!!))
-                            //firstFragment.getAdapter().notifyItemInserted(itemList.size-1)
+                            secondFragment.addItem(Item(name!!,bitmap,location!!,time!!))
                         }
                     }
 
@@ -68,7 +72,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
             }
         }
         binding.fab.setOnClickListener {
-            //Snackbar.make(it, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
             toAddItemActivity.launch(Intent(this,AddItemActivity::class.java))
         }
 
@@ -88,10 +91,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
         })
 
         replaceFragment(firstFragment)
-    }
-
-    fun test(){
-        Log.d("TTT","TTTTTTTTTT")
     }
 
     private fun replaceFragment(fragment: Fragment) {

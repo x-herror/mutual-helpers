@@ -78,12 +78,12 @@ class FirstFragment : Fragment() {
         cursor.use {
             if (it.moveToFirst()){
                 do{
-
                     val name=it.getString(it.getColumnIndex("name"))
                     val imagePath=it.getString(it.getColumnIndex("imagePath"))
+                    val chooseOption=it.getInt(it.getColumnIndex("chooseOption"))
                     var bitmap:Bitmap?=null
                     if (imagePath!=""){
-                        bitmap=Utils.getBitmap(imagePath)
+                        bitmap=Utils.getBitmap(imagePath,chooseOption)
                     }
                     val location=it.getString(it.getColumnIndex("location"))
                     val time=it.getString(it.getColumnIndex("time"))

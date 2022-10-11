@@ -35,16 +35,17 @@ import java.util.*
 private const val RESULT_LOAD_IMAGE = 1
 private const val RESULT_CAMERA_IMAGE = 2
 class AddItemActivity : AppCompatActivity() {
+    private val tag="AddItemActivity"
     var imgPath = ""
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         var bitmap: Bitmap?=null
+        //0 for Gallery
+        //1 for Camera
+        var chooseOption=-1
         super.onCreate(savedInstanceState)
-        val binding =
-            ActivityAddItemBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
-       // val selectPictureBinding = ActivitySelectPictureBinding.inflate(layoutInflater)
-        val dialogChoosePicTypeBinding = DialogChoosePicTypeBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
+        val binding = ActivityAddItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(
@@ -60,36 +61,20 @@ class AddItemActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
                     RESULT_OK -> {
-                        // 拉起相机回调data为null，打开相册回调不为null
-                        if (it.data == null && imgPath.isNotEmpty()) {
+                        Log.d("GalleryReturn", "return uri is  ${it.data?.data.toString()}")
+                        it.data!!.data?.let { it1->
                             Glide.with(this)
-                                .load(imgPath)
+                                .load(it1)
                                 .skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .into(binding.ivHelpImageFirst)
-                            //binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
-                            //binding.ivHelpImageSecond.visibility = View.VISIBLE
+                            bitmap=getBitmapFromUri(it1)
                         }
-                        else if (it.data != null) {
-                            //Log.d("data_return", it.data.toString())
-                            //Log.d("data_return", it.data!!.toUri(0))
-                            //Log.d("data_return", it.data!!.data.toString())
-                            //TODO:it.data!!.data
-                            it.data!!.data?.let { it1->
-                                Glide.with(this)
-                                    .load(it1)
-                                    .skipMemoryCache(true)
-                                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                    .into(binding.ivHelpImageFirst)
-                                bitmap=getBitmapFromUri(it1)
-                                //Log.d("TTT",bitmap.toString())
-                            }
-                            binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
-                            //binding.ivHelpImageSecond.visibility = View.VISIBLE
-                        }
+                        chooseOption=0
+                        binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
                     }
                     else -> {
-                        Log.d("data_return", it.resultCode.toString())
+                        Log.d("GalleryReturn", "error with resultCode: ${it.resultCode.toString()}")
                     }
                 }
             }
@@ -99,18 +84,16 @@ class AddItemActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
                     RESULT_OK -> {
-                        // 拉起相机回调data为null，打开相册回调不为null
-                            //val bitmap=BitmapFactory.decodeStream()
-                            Glide.with(this)
-                                .load(imgPath)
-                                .skipMemoryCache(true)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .into(binding.ivHelpImageFirst)
-                            binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
-                            //binding.ivHelpImageSecond.visibility = View.VISIBLE
+                        Glide.with(this)
+                            .load(imgPath)
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .into(binding.ivHelpImageFirst)
+                        binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
+                        chooseOption=1
                     }
                     else -> {
-                        Log.d("data_return", it.resultCode.toString())
+                        Log.d("CameraReturn", "error with resultCode: ${it.resultCode.toString()}")
                     }
                 }
             }
@@ -122,20 +105,15 @@ class AddItemActivity : AppCompatActivity() {
                 AlertDialog.Builder(this).setView(chooseTypeView).setCancelable(true).create()
             //Objects.requireNonNull(selectDialog.window)!!.setBackgroundDrawableResource(R.color.transparent)
 
-
-
             val cameraButton:TextView=chooseTypeView.findViewById(R.id.tv_choose_pic_camera)
             cameraButton.setOnClickListener {
                 selectDialog.dismiss()
-                // 拉起相机
                 toCameraActivity.launch(openCamera())
             }
-
 
             val galleryButton:TextView=chooseTypeView.findViewById(R.id.tv_choose_pic_gallery)
             galleryButton.setOnClickListener {
                 selectDialog.dismiss()
-                // 打开相册
                 val gallery = Intent(Intent.ACTION_PICK)
                 gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 toGalleryActivity.launch(gallery)
@@ -145,45 +123,60 @@ class AddItemActivity : AppCompatActivity() {
             cancelButton.setOnClickListener {
                 selectDialog.dismiss()
             }
+
             selectDialog.show()
         }
 
         binding.activityAddItemButtonGo.setOnClickListener {
-            val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
-            val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
-            val date=Date(System.currentTimeMillis())
             val name=binding.activityAddItemEditTextName.text.toString()
-            val owner="xherror"
             val location=binding.activityAddItemEditTextLocation.text.toString()
-            var imagePath=""
-            if (name!=""&&location!=""){
+            val phone=binding.activityAddItemEditTextPhone.text.toString()
+
+
+            if (name!="" && location!="" && phone!=""){
+                Log.d(tag,"name:$name location:$location phone:$phone" )
+
+                val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
+                val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
+                val date=Date(System.currentTimeMillis())
+                val owner="xherror"
+                var imagePath=""
+                val description=binding.activityAddItemEditTextDescription.text.toString()
                 val time=simpleDateFormat.format(date)
-                bitmap?.let {
-                    val saveTime=saveDateFormat.format(date)
-                    val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
-                    saveBitmap(imageName,it,this)
-                    imagePath = this.filesDir.toString() + "/images/"+imageName
-                    Log.d("Save Bitmap", "Save Path=$imagePath")
+
+                when (chooseOption){
+                    0->{
+                        bitmap?.let {
+                            val saveTime=saveDateFormat.format(date)
+                            val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
+                            imagePath = saveBitmap(imageName,it,this)
+                        }
+                    }
+                    1->{
+                        imagePath=imgPath
+                    }
                 }
+
                 dbHelper.writableDatabase.run {
-                    execSQL("INSERT INTO MyItems(name,imagePath,location,time,owner) VALUES(?,?,?,?,?)", arrayOf(name,imagePath,location,time,owner))
+                    execSQL("INSERT INTO MyItems(name,imagePath,location,time,phone,owner,description,chooseOption) VALUES(?,?,?,?,?,?,?,?)",
+                        arrayOf(name,imagePath,location,time,phone,owner,description,chooseOption))
                 }
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
+                Log.d(tag,"imagePath:$imagePath")
                 val intent=Intent()
                 intent.run {
+                    putExtra("chooseOption",chooseOption)
                     putExtra("isGo",true)
                     putExtra("name",name)
                     putExtra("imagePath",imagePath)
                     putExtra("location",location)
                     putExtra("time",time)
-                    putExtra("owner",owner)
                 }
                 setResult(RESULT_OK,intent)
                 finish()
             }else{
-                Toast.makeText(this,"提交失败",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"请填写完整QWQ",Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
@@ -193,16 +186,6 @@ class AddItemActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode){
-            0->{
-                if (grantResults.isEmpty()&&grantResults[0]== PackageManager.PERMISSION_GRANTED){
-
-                }else{
-                    Toast.makeText(this, "You denied the permission", Toast.LENGTH_SHORT).show()
-
-                }
-            }
-        }
     }
 
     //通过Uri获取BitMap
@@ -210,61 +193,41 @@ class AddItemActivity : AppCompatActivity() {
         BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
     }
 
-    fun saveBitmap(name: String, bm: Bitmap, mContext: Context) {
+    private fun saveBitmap(name: String, bm: Bitmap, mContext: Context):String {
 
-        Log.d("Save Bitmap", "Ready to save picture")
-        //指定我们想要存储文件的地址
-        val targetPath = mContext.filesDir.toString() + "/images/"
-        Log.d("Save Bitmap", "Save Path=$targetPath")
-        //
-        val file = File(targetPath)
-        if (file.exists()) {} else {
-            file.mkdirs()
-        }
-        //如果指定文件夹创建成功，那么我们则需要进行图片存储操作
+        Log.d("SaveBitmap", "Ready to save bitmap")
+        val targetPath = getFileDir("bitmaps")
         val saveFile = File(targetPath, name)
         try {
             val saveImgOut = FileOutputStream(saveFile)
-            // compress - 压缩的意思
             bm.compress(Bitmap.CompressFormat.JPEG, 80, saveImgOut)
             //存储完成后需要清除相关的进程
             saveImgOut.flush()
             saveImgOut.close()
-            Log.d("Save Bitmap", "The picture is save to your phone!")
+            Log.d("SaveBitmap", "The bitmap is save to your phone!")
+            Log.d("SaveBitmap", "Save Path=${saveFile.absolutePath}")
         } catch (ex: IOException) {
             ex.printStackTrace()
         }
+        return saveFile.absolutePath
 
     }
-
-    private fun fileIsExist(fileName: String?): Boolean {
-        //传入指定的路径，然后判断路径是否存在
-        val file = File(fileName)
-        return if (file.exists()) true else {
-            //file.mkdirs() 创建文件夹的意思
-            file.mkdirs()
-        }
-    }
-
 
     private fun openCamera():Intent{
-        // 创建照片存储目录
-        val targetPath = "$filesDir/camera/"
-        val imgDir: File = File(targetPath)
-        if (imgDir.exists()) {} else {
-            imgDir.mkdirs()
-        }
-        // 创建照片
+        Log.d("CreatePicture", "Ready to create picture")
+        val targetPath = getFileDir("camera")
         val photoName = System.currentTimeMillis().toString() + ".png"
-        val picture = File(imgDir, photoName)
+        val picture = File(targetPath, photoName)
         if (!picture.exists()) {
             try {
                 picture.createNewFile()
+                Log.d("CreatePicture", "The picture is save to your phone!")
             } catch (e: IOException) {
-                Log.d("TTT","create images error")
+                e.printStackTrace()
             }
         }
         imgPath = picture.absolutePath
+        Log.d("CreatePicture", "Save Path=${imgPath}")
         // 调用相机拍照
         val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         camera.putExtra(
@@ -274,54 +237,15 @@ class AddItemActivity : AppCompatActivity() {
         return camera
     }
 
-    fun getFilePath(dir: String): String? {
-        val path: String
-        // 判断是否有外部存储，是否可用
-        path = if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
-            getExternalFilesDir(dir)!!.absolutePath
-        } else {
-            // 使用内部储存
-            filesDir.toString() + File.separator + dir
-        }
+    private fun getFileDir(dir: String): String? {
+        // internal save dir /data/data/top.xherror.mutualhelpers/files/$dir
+        val path: String = filesDir.toString() + File.separator + dir
         val file = File(path)
         if (!file.exists()) {
             file.mkdirs()
         }
         return path
     }
-
-    /*
-    private fun choosePictureDialog() {
-    val chooseTypeView = LayoutInflater.from(this).inflate(R.layout.dialog_choose_pic_type, null)
-    val selectDialog =
-        AlertDialog.Builder(this).setView(chooseTypeView).setCancelable(false).create()
-    selectDialog.show()
-    Objects.requireNonNull(selectDialog.window)?.setBackgroundDrawableResource(R.color.transparent)
-    val dialogChoosePicTypeBinding = DialogChoosePicTypeBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
-
-    dialogChoosePicTypeBinding.tvChoosePicCamera. setOnClickListener {
-        selectDialog.dismiss()
-        // 拉起相机
-        //openCamera(type)
-    }
-
-
-    dialogChoosePicTypeBinding.tvChoosePicGallery.setOnClickListener {
-        selectDialog.dismiss()
-        // 打开相册
-        val gallery = Intent(Intent.ACTION_PICK)
-        gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        toGalleryActivity.launch(gallery)
-    }
-
-    dialogChoosePicTypeBinding.tvChoosePicCancel.setOnClickListener {
-        selectDialog.dismiss()
-    }
-
-    }
-    */
-
-     */
 
 }
 

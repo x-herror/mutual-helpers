@@ -6,16 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class MyDBHelper(val context: Context, val name:String, val version:Int):
     SQLiteOpenHelper(context, name, null, version) {
-    //private val createItems=
-    //    "CREATE table Items(id integer primary key autoincrement,author text,price real,pages integer,name text)"
-    /*
-    putExtra("name",name)
-    putExtra("imageId",imageId)
-    putExtra("location",location)
-    putExtra("time",time)
-     */
     private val createMyItems=
-        "CREATE table MyItems(id integer primary key autoincrement,name string,imagePath string,location string,time string,owner string)"
+        "CREATE table MyItems(id integer primary key autoincrement,name string,imagePath string,location string,time string,phone string,owner string,description string,chooseOption integer)"
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(createMyItems)
