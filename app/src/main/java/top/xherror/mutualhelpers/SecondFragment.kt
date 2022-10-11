@@ -21,6 +21,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
+import java.io.File
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,11 +34,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class SecondFragment : Fragment() {
+
     private val itemList=ArrayList<Item>()
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private val adapter=SecondAdapter(itemList)
+
+    init {
+        Utils.fillItemList(itemList,2)
+    }
 
     fun addItem(item:Item){
         itemList.add(item)
@@ -57,7 +63,6 @@ class SecondFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        Utils.fillItemList(itemList,2)
     }
 
     override fun onCreateView(
@@ -110,7 +115,7 @@ class SecondFragment : Fragment() {
             viewHolder.itemView.setOnClickListener {
                 val position = viewHolder.adapterPosition
                 val item = itemList[position]
-                actionStart(parent.context,item.name,item.bitmap,item.location,item.time)
+                actionStart(parent.context,item.id)
             }
             viewHolder.myItemDeleteButton.setOnClickListener {
                 val position = viewHolder.adapterPosition
@@ -122,10 +127,17 @@ class SecondFragment : Fragment() {
                     setPositiveButton("删除!"){
                             dialog,which->
                         //TODO:remove pictures!
-                        dbHelper.writableDatabase.delete("MyItems","name=?", arrayOf(item.name))
                         removeItem(item)
+
                         val activity=activity as MainActivity
                         activity.getFirstFragment().removeItem(item)
+
+                        val tuple=Utils.getTuple(item.id)
+                        val file=File(tuple.imagePath)
+                        if (file.exists()){
+                            file.delete()
+                        }
+                        dbHelper.writableDatabase.delete("MyItems","id=?", arrayOf(item.id.toString()))
 
                     }
                     setNegativeButton("算了."){

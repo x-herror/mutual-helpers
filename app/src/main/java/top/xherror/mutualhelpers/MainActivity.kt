@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.buttonToFirst.setOnClickListener {
             replaceFragment(firstFragment)
         }
@@ -63,8 +62,11 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
                         Log.d(tag,"return from add item activity")
                         Log.d(tag,"bitmap:${bitmap.toString()}")
                         if (isGo){
-                            firstFragment.addItem(Item(name!!,bitmap,location!!,time!!))
-                            secondFragment.addItem(Item(name!!,bitmap,location!!,time!!))
+                            val id=Utils.getId(name!!,location!!,time!!)
+                            if (id!=0){
+                                firstFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                                secondFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                            }
                         }
                     }
 

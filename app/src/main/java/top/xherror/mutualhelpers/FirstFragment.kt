@@ -31,6 +31,10 @@ class FirstFragment : Fragment() {
     private var param2: String? = null
     private val adapter=FirstAdapter(itemList)
 
+    init {
+        Utils.fillItemList(itemList)
+    }
+
     fun addItem(item:Item){
         itemList.add(item)
         adapter.notifyItemInserted(itemList.size-1)
@@ -57,7 +61,6 @@ class FirstFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        Utils.fillItemList(itemList)
     }
 
 

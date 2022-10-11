@@ -5,9 +5,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
+import android.widget.Toast
 import java.io.BufferedInputStream
 import java.io.FileInputStream
+import java.time.LocalDate
 import kotlin.math.roundToInt
+import kotlin.time.ExperimentalTime
 
 object Utils {
     private fun getBitmapFromBitmap(imagePath: String): Bitmap {
@@ -111,18 +114,53 @@ object Utils {
                     }
                     when (type){
                         1 ->{
-                            itemList.add(Item(name, bitmap,location,time))
+                            itemList.add(Item(id,name, bitmap,location,time))
                         }
                         2 ->{
-                            if (owner=="xherror"){itemList.add(Item(name, bitmap,location,time))}
+                            if (owner=="xherror"){itemList.add(Item(id,name, bitmap,location,time))}
                         }
                         3 ->{
-                            if (searchString in name||searchString in description||name in searchString){itemList.add(Item(name, bitmap,location,time))}
+                            if (searchString in name||searchString in description){itemList.add(Item(id,name, bitmap,location,time))}
                         }
                     }
 
                 } while (cursor.moveToNext())
             }
         }
+    }
+
+    @SuppressLint("Range")
+    fun getId(name:String, location:String, time: String):Int{
+        val cursor=dbHelper.readableDatabase.rawQuery("SELECT id FROM MyItems WHERE name=? AND location=? AND time=?",
+            arrayOf(name,location,time)
+        )
+        var id=0
+        Log.d("GetId",cursor.moveToFirst().toString())
+        if (cursor.moveToFirst()){
+            id=cursor.getInt(cursor.getColumnIndex("id"))
+        }
+        return id
+    }
+
+
+    @SuppressLint("Range")
+    fun getTuple(id:Int):Tuple {
+        val cursor = dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems WHERE id=?", arrayOf(id.toString()))
+        lateinit var tuple:Tuple
+        cursor.use {
+            it.moveToFirst()
+            Log.d("GetTuple",it.moveToFirst().toString())
+            val name = it.getString(it.getColumnIndex("name"))
+            val imagePath = it.getString(it.getColumnIndex("imagePath"))
+            val location = it.getString(it.getColumnIndex("location"))
+            val time = it.getString(it.getColumnIndex("time"))
+            val phone = it.getString(it.getColumnIndex("phone"))
+            val owner = it.getString(it.getColumnIndex("owner"))
+            val description = it.getString(it.getColumnIndex("description"))
+            val chooseOption = it.getInt(it.getColumnIndex("chooseOption"))
+            tuple=
+                Tuple(id, name, imagePath, location, time, phone, owner, description, chooseOption)
+        }
+        return tuple
     }
 }

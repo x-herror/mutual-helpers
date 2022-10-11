@@ -161,6 +161,7 @@ class AddItemActivity : AppCompatActivity() {
                     execSQL("INSERT INTO MyItems(name,imagePath,location,time,phone,owner,description,chooseOption) VALUES(?,?,?,?,?,?,?,?)",
                         arrayOf(name,imagePath,location,time,phone,owner,description,chooseOption))
                 }
+
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
                 Log.d(tag,"imagePath:$imagePath")
                 val intent=Intent()

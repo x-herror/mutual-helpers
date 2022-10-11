@@ -13,8 +13,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
 
-class Item(val name:String,val bitmap:Bitmap?,val location:String,val time:String)
-
+class Item(val id:Int,val name:String,val bitmap:Bitmap?,val location:String,val time:String)
+class Tuple(val id :Int,val name :String,val imagePath :String,val location :String,val time :String,val phone :String,val owner :String,val description :String,val chooseOption :Int)
 class FirstAdapter(val itemList: List<Item>) : RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,7 +30,7 @@ class FirstAdapter(val itemList: List<Item>) : RecyclerView.Adapter<FirstAdapter
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val item = itemList[position]
-            actionStart(parent.context,item.name,item.bitmap,item.location,item.time)
+            actionStart(parent.context,item.id)
         }
         return viewHolder
     }
