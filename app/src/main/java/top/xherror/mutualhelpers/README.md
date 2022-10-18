@@ -1,6 +1,2 @@
 # MutualHelpers
-删除功能还有bug!!
-TODO:
-- use unique id replace this
-- remove pictures!
-- cache query result
+主文件为app/src/main/java/top.xherror.mutualhelpers/MainActivity.kt

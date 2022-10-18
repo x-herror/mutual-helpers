@@ -47,6 +47,7 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityAddItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //权限申请
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             requestPermissions(
                 arrayOf(
@@ -56,7 +57,7 @@ class AddItemActivity : AppCompatActivity() {
                 ), 0
             )
         }
-
+        //相册事件回调
         val toGalleryActivity =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
@@ -79,7 +80,7 @@ class AddItemActivity : AppCompatActivity() {
                 }
             }
 
-
+        //相机事件回调
         val toCameraActivity =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
@@ -98,6 +99,7 @@ class AddItemActivity : AppCompatActivity() {
                 }
             }
 
+        //添加照片
         binding.ivHelpImageFirst.setOnClickListener {
             val chooseTypeView =
                 LayoutInflater.from(this).inflate(R.layout.dialog_choose_pic_type, null)
@@ -127,6 +129,7 @@ class AddItemActivity : AppCompatActivity() {
             selectDialog.show()
         }
 
+        //提交事件
         binding.activityAddItemButtonGo.setOnClickListener {
             val name=binding.activityAddItemEditTextName.text.toString()
             val location=binding.activityAddItemEditTextLocation.text.toString()
@@ -179,14 +182,6 @@ class AddItemActivity : AppCompatActivity() {
                 Toast.makeText(this,"请填写完整QWQ",Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     //通过Uri获取BitMap

@@ -1,5 +1,8 @@
 package top.xherror.mutualhelpers
-
+/*
+author : xherror
+home : https://github.com/gxherror
+ */
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
@@ -17,16 +20,12 @@ import kotlin.math.log
 
 
 @SuppressLint("StaticFieldLeak")
+//全局数据库操作对象
 val dbHelper=MyDBHelper(MyApplication.getContext(),"Items.db",1)
-class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
+class MainActivity : AppCompatActivity() {
     private val tag="MainActivity"
     private val firstFragment=FirstFragment()
     private val secondFragment=SecondFragment()
-
-    override fun testData() {
-        Toast.makeText(this, "CallBack", Toast.LENGTH_SHORT).show()
-    }
-
 
     @JvmName("getFirstFragment1")
     fun getFirstFragment():FirstFragment{
@@ -36,15 +35,19 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+        //MAIN界面
         binding.buttonToFirst.setOnClickListener {
             replaceFragment(firstFragment)
         }
 
+        //MY界面
         binding.buttonToSecond.setOnClickListener {
             replaceFragment(secondFragment)
         }
 
+        //添加物品按钮的回调事件
         val toAddItemActivity= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             when(it.resultCode){
                 RESULT_OK -> {
@@ -73,10 +76,13 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
                 }
             }
         }
+
+        //浮动添加物品按钮
         binding.fab.setOnClickListener {
             toAddItemActivity.launch(Intent(this,AddItemActivity::class.java))
         }
 
+        //搜索界面
         binding.searchBar.setOnQueryTextListener(object:androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
@@ -91,10 +97,11 @@ class MainActivity : AppCompatActivity(), FirstFragment.TestDataCallback {
                 return false
             }
         })
-
+        //显示MAIN界面
         replaceFragment(firstFragment)
     }
 
+    //替换界面
     private fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()

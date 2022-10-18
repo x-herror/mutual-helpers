@@ -77,14 +77,6 @@ class FirstFragment : Fragment() {
         return  view
     }
 
-    interface TestDataCallback {
-        fun testData()
-    }
-
-    fun setCallBack(testDataCallback: TestDataCallback){
-        testDataCallback.testData()
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

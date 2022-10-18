@@ -15,7 +15,5 @@ class MyDBHelper(val context: Context, val name:String, val version:Int):
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        //if (oldVersion<=1){db?.execSQL(createCategory)}
-        //if (oldVersion<=2){db?.execSQL("ALTER TABLE Book ADD COLUMN category_id integer")}
     }
 }
