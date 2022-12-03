@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(secondFragment)
         }
 
+        binding.buttonToSetting.setOnClickListener {
+
+        }
+
         //添加物品按钮的回调事件
         val toAddItemActivity= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             when(it.resultCode){

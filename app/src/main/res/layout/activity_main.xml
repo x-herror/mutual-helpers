@@ -29,6 +29,14 @@
             android:layout_height="wrap_content"
             android:text="MY"/>
 
+        <Button
+            android:background="#33CCFF"
+            android:id="@+id/buttonToSetting"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SETTING"/>
+
     </LinearLayout>
 
     <androidx.appcompat.widget.SearchView

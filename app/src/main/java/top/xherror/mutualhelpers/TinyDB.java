@@ -21,6 +21,8 @@
 
 package top.xherror.mutualhelpers;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,8 +50,8 @@ public class TinyDB {
     private String DEFAULT_APP_IMAGEDATA_DIRECTORY;
     private String lastImagePath = "";
 
-    public TinyDB(Context appContext) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+    public TinyDB(Context appContext,String name) {
+        preferences = appContext.getSharedPreferences(name,MODE_PRIVATE);
         context = appContext;
     }
 
