@@ -84,6 +84,10 @@ class LoginInActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     fun adminInit(){
         val array=ArrayList<String>()
         val saltPassword = CommonUtils.createSignature("123456",KEY)

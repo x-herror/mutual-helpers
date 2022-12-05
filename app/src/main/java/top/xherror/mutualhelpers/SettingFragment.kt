@@ -44,13 +44,21 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view=inflater.inflate(R.layout.fragment_setting, container, false)
-        val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentSettingRecyclerView)
-        val layoutManager= LinearLayoutManager(requireActivity())
-        fragmentFirstRecyclerView.layoutManager=layoutManager
-        val adapter=PersonAdapter(waitpersonList)
-        fragmentFirstRecyclerView.adapter=adapter
+        val RV: RecyclerView =view.findViewById(R.id.fragmentSettingRecyclerView)
+        if (person.type== ADMINTYPE){
+            val layoutManager= LinearLayoutManager(requireActivity())
+            RV.layoutManager=layoutManager
+            val adapter=PersonAdapter(waitpersonList)
+            RV.adapter=adapter
+        }else{
+            RV.visibility=View.GONE
+        }
+        val loginOut:Button=view.findViewById(R.id.fragmentSettingLoginOut)
+        loginOut.setOnClickListener {
+            person.reset()
+            activity?.finish()
+        }
         return view
     }
 

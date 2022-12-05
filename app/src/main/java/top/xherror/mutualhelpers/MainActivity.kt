@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonToSetting.setOnClickListener {
-            if (person is Admin) replaceFragment(settingFragment)
+            replaceFragment(settingFragment)
         }
 
         //添加物品按钮的回调事件

@@ -26,6 +26,15 @@ open class Person() {
         return array
     }
 
+    fun reset(){
+        var account=""
+        /*store HmacSHA256 password*/
+        var password=""
+        var type= USERTYPE
+        var name="defaultName"
+        var phone=""
+    }
+
 }
 
 class Admin:Person{

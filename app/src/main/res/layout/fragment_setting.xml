@@ -4,10 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingFragment">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragmentSettingRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/fragmentSettingLoginOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login out"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragmentSettingRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
 
 </FrameLayout>
