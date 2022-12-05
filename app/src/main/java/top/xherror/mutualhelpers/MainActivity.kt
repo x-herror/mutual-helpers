@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val tag="MainActivity"
     private val firstFragment=FirstFragment()
     private val secondFragment=SecondFragment()
-
+    private  val settingFragment=SettingFragment()
     @JvmName("getFirstFragment1")
     fun getFirstFragment():FirstFragment{
         return firstFragment
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.buttonToSetting.setOnClickListener {
-
+            if (person is Admin) replaceFragment(settingFragment)
         }
 
         //添加物品按钮的回调事件

@@ -19,7 +19,7 @@ open class Person() {
 
     fun toList():ArrayList<String>{
         val array= java.util.ArrayList<String>()
-        array.add(CommonUtils.createSignature(password, KEY))
+        array.add(password)
         array.add(type)
         array.add(name)
         array.add(phone)

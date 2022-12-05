@@ -16,7 +16,7 @@ class LoginInActivity : BaseActivity() {
     val tag="loginIn"
     override fun onCreate(savedInstanceState: Bundle?) {
         persondb=TinyDB(applicationContext,"personList")
-        //adminInit()
+        adminInit()
         val rememberdb=TinyDB(applicationContext,"rememberList")
 
         var isRemember=rememberdb.getBoolean("remember")
@@ -62,6 +62,10 @@ class LoginInActivity : BaseActivity() {
                         isRemember = true
                         rememberdb.putBoolean("remember",true)
                         rememberdb.putListString(inputAccount,arraylist)
+                    }else{
+                        isRemember = false
+                        rememberdb.remove("remember")
+                        rememberdb.remove(inputAccount)
                     }
 
                     rememberdb.putString("rememberAccount",inputAccount)
@@ -87,7 +91,7 @@ class LoginInActivity : BaseActivity() {
         array.add(ADMINTYPE)
         array.add("xherror")
         array.add("18759628434")
-        persondb?.putListString("admin00",array)
+        if (persondb?.getListString("admin00")!!.isEmpty())  persondb?.putListString("admin00",array)
     }
 }
 
