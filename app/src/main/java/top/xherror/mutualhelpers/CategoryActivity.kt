@@ -1,22 +1,30 @@
 package top.xherror.mutualhelpers
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import top.xherror.mutualhelpers.databinding.ActivityCategoryBinding
 import java.io.File
 
 const val DEFAULT_CATEGORY="defaultCategory"
 const val DEFAULT_ATTRIBUTES="defaultAttributes"
 class AddCategoryActivity : AppCompatActivity() {
+    val tag="AddCategoryActivity"
     lateinit var categorydb:TinyDB
     private val categoryList = ArrayList<Category>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,14 +32,50 @@ class AddCategoryActivity : AppCompatActivity() {
         val binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initCategories()
-
         val layoutManager= LinearLayoutManager(this)
         val RV=binding.actvityAddCategoryRV
         RV.layoutManager=layoutManager
         val adapter=CategoryAdapter(categoryList)
         RV.adapter=adapter
-
         binding.actvityAddCategoryFab.setOnClickListener {
+            // Use the Builder class for convenient dialog construction
+            val builder = AlertDialog.Builder(this)
+
+            // Get the layout inflater
+            val inflater: LayoutInflater = this.layoutInflater
+
+            // Inflate the custom layout
+            val view = inflater.inflate(R.layout.dialog_add_category, null)
+
+            // Set the custom layout as the view for the dialog
+            builder.setView(view)
+
+            // Set the title of the dialog
+            builder.setTitle("Enter Name and Attributes")
+            // Get the input from the EditTexts
+
+            val nameInput = view.findViewById<EditText>(R.id.dialog_add_category_name_input)
+            val attributesInput = view.findViewById<EditText>(R.id.dialog_add_category_attributes_input)
+
+            // Set the positive button to commit the input
+            builder.setPositiveButton("Commit") { _, _ ->
+                val name = nameInput.text.toString()
+                val attributes = attributesInput.text.toString()
+                val delimiter=","
+                val array = ArrayList(attributes.split(delimiter))
+                Log.d(tag,"name:${name},array:${array}")
+                val category = Category(name, array)
+                categoryList.add(category)
+                adapter.notifyDataSetChanged()
+                categorydb.putListString(name,array)
+            }
+
+            // Set the negative button to cancel the dialog
+            builder.setNegativeButton("Cancel") { _, _ ->
+                // Send the cancel event back to the activity
+            }
+
+            builder.create().show()
         }
     }
 
@@ -61,10 +105,6 @@ class AddCategoryActivity : AppCompatActivity() {
                         categoryList.remove(category)
                         super.notifyItemRemoved(position)
                         categorydb.remove(category.name)
-                        val file= File(category.imagePath)
-                        if (file.exists()){
-                            file.delete()
-                        }
                     }
                     setNegativeButton("算了."){
                             dialog,which->
@@ -78,7 +118,6 @@ class AddCategoryActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val category = categoryList[position]
             holder.categoryName.text=category.name
-            if (File(category.imagePath).exists()) holder.categoryImage.setImageBitmap(Utils.getBitmap(category.imagePath,0))
             holder.categoryAttributes.text=category.getAttrString()
         }
 
