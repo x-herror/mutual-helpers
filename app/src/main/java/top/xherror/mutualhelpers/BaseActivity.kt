@@ -20,6 +20,10 @@ open class BaseActivity : AppCompatActivity() {
         removeActivity(this)
     }
 
+    override fun onBackPressed() {
+        finishAll()
+    }
+
     protected  fun saveUseFile(inputText:String){
         try {
             val fd=openFileOutput("data", Context.MODE_PRIVATE)
@@ -52,25 +56,25 @@ open class BaseActivity : AppCompatActivity() {
         return result
     }
 
-    companion object Utils{
-        private val activities=ArrayList<Activity>()
-        fun addActivity(activity: Activity){
-            activities.add(activity)
-        }
-        fun removeActivity(activity: Activity){
-            activities.remove(activity)
-        }
-        fun finishAll(){
-            for (activity in activities){
-                if(!activity.isFinishing){
-                    activity.finish()
-                }
-            }
-            activities.clear()
-        }
+    private val activities=ArrayList<Activity>()
 
-
-
+    private fun addActivity(activity: Activity){
+        activities.add(activity)
     }
+    private fun removeActivity(activity: Activity){
+        activities.remove(activity)
+    }
+    private fun finishAll(){
+        for (activity in activities){
+            if(!activity.isFinishing){
+                activity.finish()
+            }
+        }
+        activities.clear()
+    }
+
+
+
+
 
 }

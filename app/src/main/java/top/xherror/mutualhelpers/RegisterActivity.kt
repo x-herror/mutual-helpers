@@ -9,7 +9,7 @@ import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
 import top.xherror.mutualhelpers.databinding.ActivityRegisterBinding
 import java.util.ArrayList
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityRegisterBinding.inflate(layoutInflater)

@@ -22,7 +22,7 @@ import kotlin.math.log
 @SuppressLint("StaticFieldLeak")
 //全局数据库操作对象
 val dbHelper=MyDBHelper(MyApplication.getContext(),"Items.db",1)
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private val tag="MainActivity"
     private val firstFragment=FirstFragment()
     private val secondFragment=SecondFragment()

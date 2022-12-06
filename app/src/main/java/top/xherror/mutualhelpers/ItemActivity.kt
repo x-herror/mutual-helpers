@@ -8,7 +8,7 @@ import android.os.Bundle
 import top.xherror.mutualhelpers.databinding.ActivityItemBinding
 import top.xherror.mutualhelpers.databinding.ActivityMainBinding
 
-class ItemActivity : AppCompatActivity() {
+class ItemActivity : BaseActivity() {
     /*
     val name:String,val imageId:Int,val location:String,val time:String
      */

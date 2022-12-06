@@ -10,12 +10,14 @@ import top.xherror.mutualhelpers.databinding.ActivityLoginInBinding
 import java.util.ArrayList
 
 @SuppressLint("StaticFieldLeak")
-var persondb:TinyDB?=null
+lateinit var persondb:TinyDB
+lateinit var settingdb:TinyDB
 lateinit var person:Person
 class LoginInActivity : BaseActivity() {
     val tag="loginIn"
     override fun onCreate(savedInstanceState: Bundle?) {
         persondb=TinyDB(applicationContext,"personList")
+        settingdb= TinyDB(applicationContext,"settingList")
         adminInit()
         val rememberdb=TinyDB(applicationContext,"rememberList")
 
@@ -33,7 +35,7 @@ class LoginInActivity : BaseActivity() {
         }
         binding.activityLoginInButtonLoginIn.setOnClickListener {
             val inputAccount=binding.activityLoginInAccountEdit.text.toString()
-            var arraylist=persondb?.getListString(inputAccount)
+            var arraylist=persondb.getListString(inputAccount)
             /*
             * arraylist[0]:password
             * arraylist[1]:type  U A
@@ -95,7 +97,7 @@ class LoginInActivity : BaseActivity() {
         array.add(ADMINTYPE)
         array.add("xherror")
         array.add("18759628434")
-        if (persondb?.getListString("admin00")!!.isEmpty())  persondb?.putListString("admin00",array)
+        if (persondb.getListString("admin00")!!.isEmpty())  persondb?.putListString("admin00",array)
     }
 }
 

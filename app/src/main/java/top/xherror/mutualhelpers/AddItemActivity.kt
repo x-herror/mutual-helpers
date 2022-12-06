@@ -34,7 +34,7 @@ import java.util.*
 
 private const val RESULT_LOAD_IMAGE = 1
 private const val RESULT_CAMERA_IMAGE = 2
-class AddItemActivity : AppCompatActivity() {
+class AddItemActivity : BaseActivity() {
     private val tag="AddItemActivity"
     var imgPath = ""
     @SuppressLint("SimpleDateFormat")
