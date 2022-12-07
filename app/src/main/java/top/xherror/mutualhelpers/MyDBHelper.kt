@@ -18,3 +18,7 @@ class MyDBHelper(val context: Context, val name:String, val version:Int):
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 }
+
+class DateBase(){
+
+}

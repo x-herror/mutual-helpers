@@ -66,7 +66,7 @@ class AddCategoryActivity : AppCompatActivity() {
                 Log.d(tag,"name:${name},array:${array}")
                 val category = Category(name, array)
                 categoryList.add(category)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemInserted(categoryList.size)
                 categorydb.putListString(name,array)
             }
 
@@ -138,6 +138,7 @@ class AddCategoryActivity : AppCompatActivity() {
             val category=Category(k,list)
             categoryList.add(category)
         }
+        Log.d(tag,categoryList.toString())
     }
 
 }
