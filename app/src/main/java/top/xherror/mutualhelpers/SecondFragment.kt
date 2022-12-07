@@ -2,11 +2,7 @@ package top.xherror.mutualhelpers
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +10,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
@@ -35,25 +27,22 @@ private const val ARG_PARAM2 = "param2"
  */
 class SecondFragment : Fragment() {
 
-    private val itemList=ArrayList<Item>()
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private val adapter=SecondAdapter(itemList)
+    private val adapter=SecondAdapter(DateBase.myItemList)
 
-    init {
-        Utils.fillItemList(itemList,2)
-    }
-
-    fun addItem(item:Item){
-        itemList.add(item)
-        adapter.notifyItemInserted(itemList.size-1)
+    fun addItem(item:EntityItem){
+        DateBase.myItemList.add(item)
+        adapter.notifyItemInserted(DateBase.myItemList.size-1)
+        DateBase.insertItems(item)
     }
 
 
-    fun removeItem(item:Item){
-        itemList.remove(item)
-        adapter.notifyItemRemoved(itemList.size-1)
+    fun removeItem(item:EntityItem){
+        DateBase.myItemList.remove(item)
+        adapter.notifyItemRemoved(DateBase.myItemList.size-1)
+        DateBase.deleteItems(item)
     }
 
     @SuppressLint("Range")
@@ -99,7 +88,7 @@ class SecondFragment : Fragment() {
             }
     }
 
-    inner class SecondAdapter(val itemList: List<Item>) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
+    inner class SecondAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val itemImage: ImageView = view.findViewById(R.id.itemImage)
@@ -126,19 +115,9 @@ class SecondFragment : Fragment() {
                     setCancelable(false)
                     setPositiveButton("删除!"){
                             dialog,which->
-                        //TODO:remove pictures!
                         removeItem(item)
-
                         val activity=activity as MainActivity
                         activity.getFirstFragment().removeItem(item)
-
-                        val tuple=Utils.getTuple(item.id)
-                        val file=File(tuple.imagePath)
-                        if (file.exists()){
-                            file.delete()
-                        }
-                        DateBase.myDBHelper.writableDatabase.delete("MyItems","id=?", arrayOf(item.id.toString()))
-
                     }
                     setNegativeButton("算了."){
                             dialog,which->
@@ -151,7 +130,7 @@ class SecondFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = itemList[position]
-            holder.itemImage.setImageBitmap(item.bitmap)
+            if (item.imagePath.isNotEmpty()) holder.itemImage.setImageBitmap(Utils.getBitmap(item.imagePath,item.chooseOption))
             holder.itemName.text = item.name
             holder.itemLocation.text=item.location
             holder.itemTime.text=item.time

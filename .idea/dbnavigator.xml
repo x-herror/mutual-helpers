@@ -57,9 +57,6 @@
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
   </component>
-  <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$USER_HOME$/AppData/Local/Google/AndroidStudio2021.3/device-explorer/xiaomi-redmi_4-7deca3af7d23/data/data/top.xherror.mutualhelpers/databases/Items.db" connection-id="virtual-sqlite-connection" session-id="" current-schema="" />
-  </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
     <execution-history>

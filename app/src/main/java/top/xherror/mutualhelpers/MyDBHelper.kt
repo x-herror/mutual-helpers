@@ -16,6 +16,8 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
+import java.io.File
+
 
 class MyDBHelper(val name:String, val version:Int):
     SQLiteOpenHelper(MyApplication.getContext(), name, null, version) {
@@ -32,15 +34,28 @@ class MyDBHelper(val name:String, val version:Int):
     }
 }
 
+const val DATABASE_NAME="items.db"
 object DateBase {
     val tag="DateBase"
     lateinit var myDBHelper:MyDBHelper
-    lateinit var categoryList:ArrayList<Category>
+    val categoryList=ArrayList<Category>()
+    lateinit var myItemList:ArrayList<EntityItem>
+    lateinit var db:AppDatabase
+    lateinit var itemDao:ItemDao
 
     fun init(name:String, version:Int){
-        // In file
-        Database.connect("jdbc:sqlite:${MyApplication.getContext().filesDir}/data.db", "org.sqlite.JDBC")
+
+        db = Room.databaseBuilder(
+            MyApplication.getContext(),
+            AppDatabase::class.java, DATABASE_NAME
+        ).allowMainThreadQueries().build()
+
+        itemDao = DateBase.db.itemDao()
+
         myDBHelper=MyDBHelper(name, version)
+
+        myItemList= ArrayList(itemDao.getMyItems(person.account))
+
         val categorydb= TinyDB(MyApplication.getContext(),"categoryList")
 
         if (categorydb.getListString(DEFAULT_CATEGORY).isEmpty()){
@@ -58,35 +73,35 @@ object DateBase {
         }
         Log.d(tag,categoryList.toString())
     }
-}
 
-object ItemTable : IntIdTable() {
-    val name= varchar("name", 50)
-    val category= varchar("category", 50)
-    val location= varchar("location", 50)
-    val time= varchar("time", 50)
-    val imagePath = varchar("imagePath", 255)
-    val chooseOption= integer("chooseOption")
-    val phone= varchar("phone",     50)
-    val ownerAccount= varchar("ownerAccount", 50)
-    val ownerName= varchar("ownerName", 50)
-    val attributes=varchar("attributes",255)
-}
+    fun insertItems(vararg items: EntityItem){
+        itemDao.insertItems(*items)
+    }
 
-const val CHOOSE_GALLERY=0
-const val CHOOSE_CAMERA=1
-class  DAOItem(id:EntityID<Int>):IntEntity(id){
-    companion object  : IntEntityClass<DAOItem>(ItemTable)
-    var name by ItemTable.name
-    var category by ItemTable.category
-    var location by ItemTable.location
-    var time by ItemTable.time
-    var imagePath by ItemTable.imagePath
-    var chooseOption by ItemTable.chooseOption
-    var phone by ItemTable.phone
-    var ownerAccount by ItemTable.ownerAccount
-    var ownerName by ItemTable.ownerName
-    var attributes by ItemTable.attributes
+    fun deleteItems(vararg items: EntityItem){
+        items.onEach {
+            val file=File(it.imagePath)
+            if (file.exists()){
+                file.delete()
+            }
+        }
+        itemDao.deleteItems(*items)
+    }
+
+    fun getAll()=ArrayList<EntityItem>(itemDao.getAll())
+
+    fun getSpecialCategory(category:String)=ArrayList<EntityItem>(itemDao.getSpecialCategory(category))
+
+    fun getCategoryNameList():ArrayList<String>{
+        val array=ArrayList<String>()
+        categoryList.onEach {
+            array.add(it.name)
+        }
+        return array
+    }
+
+    fun getCategory(name:String)=categoryList.find { it.name==name }
+
 }
 
 @androidx.room.Database(entities = [EntityItem::class], version = 1,exportSchema = false)
@@ -94,6 +109,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
 }
 
+const val CHOOSE_GALLERY=0
+const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem(
     @PrimaryKey(autoGenerate = true) val id: Int=0,
@@ -125,4 +142,7 @@ interface ItemDao {
 
     @Query("SELECT * FROM EntityItem")
     fun getAll(): List<EntityItem>
+
+    @Query("SELECT * FROM EntityItem WHERE ownerAccount = :ownerAccount")
+    fun getMyItems(ownerAccount: String): List<EntityItem>
 }

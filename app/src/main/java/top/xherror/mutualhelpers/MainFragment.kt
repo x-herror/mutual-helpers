@@ -1,13 +1,14 @@
 package top.xherror.mutualhelpers
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.Toast
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -16,22 +17,14 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ThirdFragment.newInstance] factory method to
+ * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ThirdFragment : Fragment() {
-    private var searchString=""
-    private val itemList=ArrayList<EntityItem>()
-    private val adapter=FirstAdapter(itemList)
+class MainFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
-    fun setSearchString(query:String){
-        searchString=query
-    }
-
-    @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -44,16 +37,16 @@ class ThirdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view=inflater.inflate(R.layout.fragment_first, container, false)
-
-        val fragmentFirstRecyclerView: RecyclerView =view.findViewById(R.id.fragmentFirstRecyclerView)
-
-        //val layoutManager= LinearLayoutManager(requireActivity())
-        val layoutManager= StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL)
-        fragmentFirstRecyclerView.layoutManager=layoutManager
-
-        fragmentFirstRecyclerView.adapter=adapter
+        val view = inflater.inflate(R.layout.fragment_main, container, false)
+        val adapter = ArrayAdapter(requireActivity(),android.R.layout.simple_list_item_1, DateBase.getCategoryNameList())
+        val listView = view.findViewById<ListView>(R.id.fragment_main_listview)
+        listView.adapter = adapter
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val category = DateBase.categoryList[position]
+            Toast.makeText(requireActivity(), category.name, Toast.LENGTH_SHORT).show()
+            val activity=requireActivity() as MainActivity
+            activity.replaceFragment(FirstFragment.newInstance(category.name))
+        }
         return view
     }
 
@@ -64,16 +57,17 @@ class ThirdFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment ThirdFragment.
+         * @return A new instance of fragment MainFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            ThirdFragment().apply {
+            MainFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)
                 }
             }
     }
+
 }

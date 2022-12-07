@@ -27,7 +27,6 @@ class LoginInActivity : BaseActivity() {
         setContentView(binding.root)
         binding.activityLoginInAccountEdit.setText(rememberdb.getString("rememberAccount"))
         if (isRemember){
-            person= Person(rememberdb.getString("rememberAccount"),rememberdb.getListString(rememberdb.getString("rememberAccount")))
             if (person.type== ADMINTYPE) person= Admin(person.account, person.toList())
             Log.d(tag,"account:${person.account.toString()},type:${person.type.toString()} login in")
             startActivity(Intent(this, MainActivity::class.java))

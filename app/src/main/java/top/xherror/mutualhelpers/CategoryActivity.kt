@@ -21,8 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import top.xherror.mutualhelpers.databinding.ActivityCategoryBinding
 import java.io.File
 
-const val DEFAULT_CATEGORY="defaultCategory"
-const val DEFAULT_ATTRIBUTES="defaultAttributes"
+
 class AddCategoryActivity : AppCompatActivity() {
     val tag="AddCategoryActivity"
     lateinit var categorydb:TinyDB

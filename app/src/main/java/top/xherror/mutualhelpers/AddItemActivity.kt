@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import org.sqlite.core.DB
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
 import top.xherror.mutualhelpers.databinding.DialogChoosePicTypeBinding
 import java.io.*

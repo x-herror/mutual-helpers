@@ -5,8 +5,10 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
+const val DEFAULT_CATEGORY="defaultCategory"
+const val DEFAULT_ATTRIBUTES="defaultAttributes"
 class Category(var name:String="",var attributes:ArrayList<String>) {
-    val itemList=ItemList(name, attributes)
+    val itemList=DateBase.getSpecialCategory(name)
 
     fun getAttrString():String{
         var str=""
@@ -15,16 +17,5 @@ class Category(var name:String="",var attributes:ArrayList<String>) {
         }
         return str
     }
-}
 
-class ItemList(var name:String="",var attributes:ArrayList<String>){
-    lateinit var list:ArrayList<DAOItem>
-    init {
-        transaction {
-            val daoItems=DAOItem.find { ItemTable.category eq name }
-            daoItems.forEach {
-                list.add(it)
-            }
-        }
-    }
 }

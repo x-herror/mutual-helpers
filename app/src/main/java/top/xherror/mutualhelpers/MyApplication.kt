@@ -9,7 +9,9 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context=applicationContext
-
+        val rememberdb=TinyDB(applicationContext,"rememberList")
+        person= Person(rememberdb.getString("rememberAccount"),rememberdb.getListString(rememberdb.getString("rememberAccount")))
+        DateBase.init(DATABASE_NAME,1)
     }
 
     companion object Utils{

@@ -29,6 +29,7 @@ import kotlin.math.log
 //全局数据库操作对象
 class MainActivity : BaseActivity() {
     private val tag="MainActivity"
+    private lateinit var mainFragment:MainFragment
     private lateinit var firstFragment:FirstFragment
     private lateinit var secondFragment:SecondFragment
     private lateinit var settingFragment:SettingFragment
@@ -43,11 +44,9 @@ class MainActivity : BaseActivity() {
         val date= Date(System.currentTimeMillis())
         val simpleDateFormat= SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
         val timeP=simpleDateFormat.format(date)
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database-name"
-        ).allowMainThreadQueries().build()
-        val itemDao = db.itemDao()
+
+
+        /*
         val entityItem=EntityItem(name = "apple",
                 category = DEFAULT_CATEGORY,
                 location= "SJTU",
@@ -58,16 +57,19 @@ class MainActivity : BaseActivity() {
                 ownerAccount= "admin00",
                 ownerName= "xherror",
                 attributes= DEFAULT_ATTRIBUTES)
-        itemDao.insertItems(entityItem)
-        val items: ArrayList<EntityItem> = ArrayList(itemDao.getAll())
-        Log.d(tag,items.toString())
+
+        DateBase.insertItems(entityItem)
+        val itemList=DateBase.getAll()
+        Log.d(tag,itemList.toString())
+        */
+        mainFragment=MainFragment()
         firstFragment=FirstFragment()
         secondFragment=SecondFragment()
         settingFragment=SettingFragment()
         setContentView(binding.root)
         //MAIN界面
         binding.buttonToFirst.setOnClickListener {
-            replaceFragment(firstFragment)
+            replaceFragment(mainFragment)
         }
 
         //MY界面
@@ -99,8 +101,8 @@ class MainActivity : BaseActivity() {
                         if (isGo){
                             val id=Utils.getId(name!!,location!!,time!!)
                             if (id!=0){
-                                firstFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
-                                secondFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                                //firstFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                                //secondFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
                             }
                         }
                     }
@@ -130,11 +132,11 @@ class MainActivity : BaseActivity() {
             }
         })
         //显示MAIN界面
-        replaceFragment(firstFragment)
+        replaceFragment(mainFragment)
     }
 
     //替换界面
-    private fun replaceFragment(fragment: Fragment) {
+    fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, fragment)
