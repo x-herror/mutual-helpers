@@ -26,7 +26,8 @@ class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<F
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val item = itemList[position]
-            actionStart(parent.context,item.id)
+            ItemActivity.showEntityItem=item
+            actionStart(parent.context)
         }
         return viewHolder
     }

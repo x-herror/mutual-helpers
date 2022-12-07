@@ -22,10 +22,11 @@ open class BaseActivity : AppCompatActivity() {
         removeActivity(this)
     }
 
+    /*
     override fun onBackPressed() {
         finishAll()
     }
-
+     */
     protected  fun saveUseFile(inputText:String){
         try {
             val fd=openFileOutput("data", Context.MODE_PRIVATE)

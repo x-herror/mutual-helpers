@@ -24,13 +24,11 @@ import java.io.File
 
 class AddCategoryActivity : AppCompatActivity() {
     val tag="AddCategoryActivity"
-    lateinit var categorydb:TinyDB
-    private val categoryList = ArrayList<Category>()
+    private val categoryList = DateBase.categoryList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initCategories()
         val layoutManager= LinearLayoutManager(this)
         val RV=binding.actvityAddCategoryRV
         RV.layoutManager=layoutManager
@@ -66,9 +64,8 @@ class AddCategoryActivity : AppCompatActivity() {
                 val category = Category(name, array)
                 categoryList.add(category)
                 adapter.notifyItemInserted(categoryList.size)
-                categorydb.putListString(name,array)
+                DateBase.categorydb.putListString(name,array)
             }
-
             // Set the negative button to cancel the dialog
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Send the cancel event back to the activity
@@ -103,7 +100,7 @@ class AddCategoryActivity : AppCompatActivity() {
                             dialog,which->
                         categoryList.remove(category)
                         super.notifyItemRemoved(position)
-                        categorydb.remove(category.name)
+                        DateBase.categorydb.remove(category.name)
                     }
                     setNegativeButton("算了."){
                             dialog,which->
@@ -121,23 +118,6 @@ class AddCategoryActivity : AppCompatActivity() {
         }
 
         override fun getItemCount() = categoryList.size
-    }
-
-
-    private fun initCategories(){
-        categorydb= TinyDB(applicationContext,"categoryList")
-        if (categorydb.getListString(DEFAULT_CATEGORY).isEmpty()){
-            val array=ArrayList<String>()
-            array.add(DEFAULT_ATTRIBUTES)
-            categorydb.putListString(DEFAULT_CATEGORY,array)
-        }
-        val categoryMap=categorydb.all
-        for ((k,v) in categoryMap){
-            val list=categorydb.getListString(k)
-            val category=Category(k,list)
-            categoryList.add(category)
-        }
-        Log.d(tag,categoryList.toString())
     }
 
 }

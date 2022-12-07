@@ -14,6 +14,7 @@ class MyApplication : Application() {
         DateBase.init(DATABASE_NAME,1)
     }
 
+
     companion object Utils{
         @SuppressLint("StaticFieldLeak")
         private lateinit var context:Context

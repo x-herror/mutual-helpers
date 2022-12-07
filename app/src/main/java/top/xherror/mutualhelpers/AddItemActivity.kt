@@ -10,27 +10,28 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import org.sqlite.core.DB
+import com.google.gson.Gson
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
-import top.xherror.mutualhelpers.databinding.DialogChoosePicTypeBinding
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 private const val RESULT_LOAD_IMAGE = 1
@@ -130,8 +131,44 @@ class AddItemActivity : BaseActivity() {
             selectDialog.show()
         }
 
+        //选择框
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item)
+        val editTextList=ArrayList<EditText>()
+        val categoryList=DateBase.getCategoryNameList()
+        var attributes =ArrayList<String>()
+        var categoryName=""
+        attributes.add(DEFAULT_ATTRIBUTES)
+        adapter.addAll(categoryList)
+        binding.activityAddItemSpinner.adapter = adapter
+        binding.activityAddItemSpinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                categoryName=categoryList[pos]
+                DateBase.getCategory(categoryName)?.attributes?.let { attributes = it }
+                attributes.onEach {
+                    binding.activityAddItemSpinnerLinearLayout.removeAllViews()
+                    val widget=addTextView()
+                    widget.text=it
+                    binding.activityAddItemSpinnerLinearLayout.addView(widget)
+                    val editText=addEditView()
+                    binding.activityAddItemSpinnerLinearLayout.addView(editText)
+                    editTextList.add(editText)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
+
         //提交事件
         binding.activityAddItemButtonGo.setOnClickListener {
+            val gson=Gson()
+            val values=ArrayList<String>()
+            editTextList.onEach { values.add(it.text.toString()) }
+            val map:Map<String,String> =attributes.zip(values).toMap()
+            val json=gson.toJson(map)
             val name=binding.activityAddItemEditTextName.text.toString()
             val location=binding.activityAddItemEditTextLocation.text.toString()
             val phone=binding.activityAddItemEditTextPhone.text.toString()
@@ -139,11 +176,11 @@ class AddItemActivity : BaseActivity() {
 
             if (name!="" && location!="" && phone!=""){
                 Log.d(tag,"name:$name location:$location phone:$phone" )
-
                 val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
                 val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
                 val date=Date(System.currentTimeMillis())
-                val owner="xherror"
+                val ownerAccount= person.account
+                val ownerName= person.name
                 var imagePath=""
                 val description=binding.activityAddItemEditTextDescription.text.toString()
                 val time=simpleDateFormat.format(date)
@@ -161,14 +198,22 @@ class AddItemActivity : BaseActivity() {
                     }
                 }
 
-                DateBase.myDBHelper.writableDatabase.run {
-                    execSQL("INSERT INTO MyItems(name,imagePath,location,time,phone,owner,description,chooseOption) VALUES(?,?,?,?,?,?,?,?)",
-                        arrayOf(name,imagePath,location,time,phone,owner,description,chooseOption))
-                }
+                val entityItem=EntityItem(name = name,
+                    category = categoryName,
+                    location= location,
+                    time= time,
+                    imagePath = imagePath,
+                    chooseOption= chooseOption,
+                    phone= phone,
+                    ownerAccount= ownerAccount,
+                    ownerName= ownerName,
+                    attributes= json)
 
+                DateBase.insertItems(entityItem)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
-                Log.d(tag,"imagePath:$imagePath")
+                MainActivity.addEntityItem=entityItem
                 val intent=Intent()
+                /*
                 intent.run {
                     putExtra("chooseOption",chooseOption)
                     putExtra("isGo",true)
@@ -177,6 +222,8 @@ class AddItemActivity : BaseActivity() {
                     putExtra("location",location)
                     putExtra("time",time)
                 }
+
+                 */
                 setResult(RESULT_OK,intent)
                 finish()
             }else{
@@ -184,6 +231,10 @@ class AddItemActivity : BaseActivity() {
             }
         }
     }
+
+    fun addTextView()=TextView(this)
+
+    fun addEditView()=EditText(this)
 
     //通过Uri获取BitMap
     private fun getBitmapFromUri(uri: Uri)=contentResolver.openFileDescriptor(uri,"r")?.use {

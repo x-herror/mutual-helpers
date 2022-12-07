@@ -11,10 +11,13 @@ open class Person() {
     var phone=""
     constructor(accountP: String, arrayList: ArrayList<String>):this(){
         account=accountP
-        password=arrayList[0]
-        type=arrayList[1]
-        name=arrayList[2]
-        phone=arrayList[3]
+        if (arrayList.isNotEmpty()){
+            password=arrayList[0]
+            type=arrayList[1]
+            name=arrayList[2]
+            phone=arrayList[3]
+        }
+
     }
 
     fun toList():ArrayList<String>{

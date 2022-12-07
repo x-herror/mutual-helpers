@@ -85,6 +85,7 @@ class MainActivity : BaseActivity() {
         val toAddItemActivity= registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ it ->
             when(it.resultCode){
                 RESULT_OK -> {
+                    /*
                     it.data?.let {
                         val isGo=it.getBooleanExtra("isGo",false)
                         val chooseOption=it.getIntExtra("chooseOption",-1)
@@ -101,12 +102,14 @@ class MainActivity : BaseActivity() {
                         if (isGo){
                             val id=Utils.getId(name!!,location!!,time!!)
                             if (id!=0){
-                                //firstFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
-                                //secondFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                                firstFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
+                                secondFragment.addItem(Item(id,name!!,bitmap,location!!,time!!))
                             }
                         }
                     }
-
+                     */
+                    //firstFragment.addItem(addEntityItem)
+                    //secondFragment.addItem(addEntityItem)
                 }
             }
         }
@@ -136,15 +139,17 @@ class MainActivity : BaseActivity() {
     }
 
     //替换界面
+    //https://juejin.cn/post/6844903917457768461
     fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, fragment)
-        transaction.addToBackStack(null)
+        if (fragment is FirstFragment ) transaction.addToBackStack(null)
         transaction.commit()
     }
 
-
-
+    companion object {
+        lateinit var addEntityItem:EntityItem
+    }
 
 }

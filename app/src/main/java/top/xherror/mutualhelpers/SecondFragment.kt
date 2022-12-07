@@ -104,7 +104,8 @@ class SecondFragment : Fragment() {
             viewHolder.itemView.setOnClickListener {
                 val position = viewHolder.adapterPosition
                 val item = itemList[position]
-                actionStart(parent.context,item.id)
+                ItemActivity.showEntityItem=item
+                actionStart(parent.context)
             }
             viewHolder.myItemDeleteButton.setOnClickListener {
                 val position = viewHolder.adapterPosition

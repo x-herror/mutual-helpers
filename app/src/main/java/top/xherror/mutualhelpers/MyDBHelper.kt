@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import androidx.room.*
 import org.jetbrains.exposed.dao.Entity
@@ -17,6 +18,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
 import java.io.File
+import java.io.Serializable
 
 
 class MyDBHelper(val name:String, val version:Int):
@@ -38,6 +40,7 @@ const val DATABASE_NAME="items.db"
 object DateBase {
     val tag="DateBase"
     lateinit var myDBHelper:MyDBHelper
+    lateinit var categorydb:TinyDB
     val categoryList=ArrayList<Category>()
     lateinit var myItemList:ArrayList<EntityItem>
     lateinit var db:AppDatabase
@@ -56,7 +59,7 @@ object DateBase {
 
         myItemList= ArrayList(itemDao.getMyItems(person.account))
 
-        val categorydb= TinyDB(MyApplication.getContext(),"categoryList")
+        categorydb= TinyDB(MyApplication.getContext(),"categoryList")
 
         if (categorydb.getListString(DEFAULT_CATEGORY).isEmpty()){
             val array=ArrayList<String>()
@@ -90,7 +93,7 @@ object DateBase {
 
     fun getAll()=ArrayList<EntityItem>(itemDao.getAll())
 
-    fun getSpecialCategory(category:String)=ArrayList<EntityItem>(itemDao.getSpecialCategory(category))
+    fun getSpecialCategory(categoryName:String)=ArrayList<EntityItem>(itemDao.getSpecialCategory(categoryName))
 
     fun getCategoryNameList():ArrayList<String>{
         val array=ArrayList<String>()
@@ -112,7 +115,7 @@ abstract class AppDatabase : RoomDatabase() {
 const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
-data class EntityItem(
+data class EntityItem (
     @PrimaryKey(autoGenerate = true) val id: Int=0,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,

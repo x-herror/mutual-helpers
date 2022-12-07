@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.hardware.biometrics.BiometricManager
 import android.util.Log
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import java.io.BufferedInputStream
 import java.io.FileInputStream
 import java.time.LocalDate
@@ -89,6 +91,11 @@ object Utils {
         return bitmap
     }
 
+    fun getCompressBitmap(imagePath: String,chooseOption:Int):Bitmap{
+        return getBitmap(imagePath, chooseOption)
+    }
+
+    /*
     @SuppressLint("Range")
     fun fillItemList(itemList: ArrayList<Item>,type:Int=1,searchString:String=""){
         //id PK auto int,name string,imagePath string,location string
@@ -163,4 +170,6 @@ object Utils {
         }
         return tuple
     }
+
+     */
 }
