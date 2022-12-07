@@ -160,7 +160,7 @@ class AddItemActivity : BaseActivity() {
                     }
                 }
 
-                dbHelper.writableDatabase.run {
+                DateBase.myDBHelper.writableDatabase.run {
                     execSQL("INSERT INTO MyItems(name,imagePath,location,time,phone,owner,description,chooseOption) VALUES(?,?,?,?,?,?,?,?)",
                         arrayOf(name,imagePath,location,time,phone,owner,description,chooseOption))
                 }

@@ -137,7 +137,7 @@ class SecondFragment : Fragment() {
                         if (file.exists()){
                             file.delete()
                         }
-                        dbHelper.writableDatabase.delete("MyItems","id=?", arrayOf(item.id.toString()))
+                        DateBase.myDBHelper.writableDatabase.delete("MyItems","id=?", arrayOf(item.id.toString()))
 
                     }
                     setNegativeButton("算了."){

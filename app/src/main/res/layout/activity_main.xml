@@ -54,12 +54,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <fragment
-            android:id="@+id/fragmentFirst"
-            android:name="top.xherror.mutualhelpers.FirstFragment"
-            android:layout_width="match_parent"
-            android:layout_height="650dp"
-            tools:layout="@layout/fragment_first" />
 
     </FrameLayout>
 

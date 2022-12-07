@@ -95,7 +95,7 @@ object Utils {
         //time string,phone string,owner string,description string
         //chooseOption integer
         //TODO:cache query result
-        val cursor=dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
+        val cursor=DateBase.myDBHelper.readableDatabase.rawQuery("SELECT * FROM MyItems",null)
         cursor.use {
             if (it.moveToFirst()){
                 do{
@@ -131,7 +131,7 @@ object Utils {
 
     @SuppressLint("Range")
     fun getId(name:String, location:String, time: String):Int{
-        val cursor=dbHelper.readableDatabase.rawQuery("SELECT id FROM MyItems WHERE name=? AND location=? AND time=?",
+        val cursor=DateBase.myDBHelper.readableDatabase.rawQuery("SELECT id FROM MyItems WHERE name=? AND location=? AND time=?",
             arrayOf(name,location,time)
         )
         var id=0
@@ -145,7 +145,7 @@ object Utils {
 
     @SuppressLint("Range")
     fun getTuple(id:Int):Tuple {
-        val cursor = dbHelper.readableDatabase.rawQuery("SELECT * FROM MyItems WHERE id=?", arrayOf(id.toString()))
+        val cursor = DateBase.myDBHelper.readableDatabase.rawQuery("SELECT * FROM MyItems WHERE id=?", arrayOf(id.toString()))
         lateinit var tuple:Tuple
         cursor.use {
             it.moveToFirst()
