@@ -101,30 +101,42 @@ object Utils {
         return getBitmap(imagePath, chooseOption)
     }
 
-    fun getBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity ){
+    fun setBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity ){
+
+        val targetWidth= 300f
+        val targetHeight= 300f
+
         if (item.imagePath.isNotEmpty()){
 
             val options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
 
-
-            if (item.chooseOption== CHOOSE_CAMERA){
+            if (item.chooseOption == CHOOSE_CAMERA){
+                val bis= BufferedInputStream(FileInputStream(item.imagePath))
+                BitmapFactory.decodeStream(bis,null,options)
+            }else if (item.chooseOption == CHOOSE_GALLERY){
                 BitmapFactory.decodeFile(item.imagePath, options)
-                val srcWidth = options.outWidth.toFloat()
-                val srcHeight = options.outHeight.toFloat()
-                Glide.with(activity)
-                    .load(item.imagePath)
-                    .apply(RequestOptions().override(600, 200))
-                    .into(imageView)
-
-            }else if (item.chooseOption== CHOOSE_GALLERY){
-
-                Glide.with(activity)
-                    .load(item.imagePath.toUri())
-                    .into(imageView)
             }
+            val width = options.outWidth.toFloat()
+            val height = options.outHeight.toFloat()
+            var inSampleSize = 1f
+            if (height > targetHeight || width > targetHeight) {
+                inSampleSize = if (width > height) {
+                    (width / targetWidth)
+                } else {
+                    (height / targetHeight)
+                }
+            }
+            val resultWidth = (width/inSampleSize).toInt()
+            val resultHeight = (height/inSampleSize).toInt()
+
+            Glide.with(activity)
+                .load(item.imagePath)
+                .apply(RequestOptions().override(resultWidth, resultHeight))
+                .into(imageView)
         }
     }
+
 
 
     /*
@@ -204,41 +216,4 @@ object Utils {
     }
 
      */
-}
-
-//https://cloud.tencent.com/developer/article/1736763
-class TransformationUtils(target: ImageView) : ImageViewTarget<Bitmap?>(target) {
-    private val target: ImageView
-
-    init {
-        this.target = target
-    }
-
-    override fun setResource(resource: Bitmap?) {
-        resource?.let {
-            view.setImageBitmap(resource)
-
-            val width: Int = resource.width
-            val height: Int = resource.height
-
-            val targetWidth = 300f
-            val targetHeight= 300f
-
-            var inSampleSize = 1f
-            if (height > targetHeight || width > targetHeight) {
-                inSampleSize = if (width > height) {
-                    (width.toFloat() / targetWidth)
-                } else {
-                    (height.toFloat() / targetHeight)
-                }
-            }
-            val imageViewHeight = (height * inSampleSize).toInt()
-            val imageViewWidth = (width * inSampleSize).toInt()
-            val params: ViewGroup.LayoutParams = target.layoutParams
-            params.height = imageViewHeight
-            params.width = imageViewWidth
-            target.layoutParams = params
-        }
-
-    }
 }

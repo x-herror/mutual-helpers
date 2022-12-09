@@ -32,7 +32,7 @@ class ThirdFragment : Fragment() {
             }else if (categoryName== MY_CATEGORY){
                 itemList=DateBase.getMyItemSearchResult(searchString!!)
             }
-            adapter=FirstAdapter(itemList)
+            adapter=FirstAdapter(itemList,requireActivity() as BaseActivity)
         }
     }
 

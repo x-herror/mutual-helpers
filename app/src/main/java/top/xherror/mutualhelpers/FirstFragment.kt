@@ -45,7 +45,7 @@ class FirstFragment : Fragment() {
             categoryName = it.getString(CATEGORY)
             DateBase.getCategory(categoryName!!)?.let {
                 category=it
-                adapter=FirstAdapter(it.itemList)
+                adapter=FirstAdapter(it.itemList,requireActivity() as BaseActivity)
             }
         }
     }
@@ -97,6 +97,7 @@ class FirstFragment : Fragment() {
                 }
             }
     }
+
 
 }
 

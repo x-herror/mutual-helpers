@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.service.chooser.ChooserTarget
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +75,7 @@ class AddItemActivity : BaseActivity() {
                                 .into(binding.ivHelpImageFirst)
                             bitmap=getBitmapFromUri(it1)
                         }
-                        chooseOption=0
+                        chooseOption= CHOOSE_GALLERY
                         binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
                     }
                     else -> {
@@ -94,7 +95,7 @@ class AddItemActivity : BaseActivity() {
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(binding.ivHelpImageFirst)
                         binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
-                        chooseOption=1
+                        chooseOption= CHOOSE_CAMERA
                     }
                     else -> {
                         Log.d("CameraReturn", "error with resultCode: ${it.resultCode.toString()}")
@@ -187,14 +188,14 @@ class AddItemActivity : BaseActivity() {
                 val time=simpleDateFormat.format(date)
 
                 when (chooseOption){
-                    0->{
+                    CHOOSE_GALLERY->{
                         bitmap?.let {
                             val saveTime=saveDateFormat.format(date)
                             val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
                             imagePath = saveBitmap(imageName,it,this)
                         }
                     }
-                    1->{
+                    CHOOSE_CAMERA->{
                         imagePath=imgPath
                     }
                 }

@@ -1,5 +1,6 @@
 package top.xherror.mutualhelpers
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
 
-class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
+class FirstAdapter(val itemList: ArrayList<EntityItem>,val activity:BaseActivity) : RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemImage: ImageView = view.findViewById(R.id.itemImage)
@@ -34,7 +35,7 @@ class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<F
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        if (item.imagePath.isNotEmpty()) holder.itemImage.setImageBitmap(Utils.getBitmap(item.imagePath,item.chooseOption))
+        Utils.setBitmapUseGlide(item,holder.itemImage, activity)
         holder.itemName.text = item.name
         holder.itemLocation.text=item.location
         holder.itemTime.text=item.time
