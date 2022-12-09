@@ -6,9 +6,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.hardware.biometrics.BiometricManager
 import android.util.Log
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.ImageViewTarget
 import java.io.BufferedInputStream
 import java.io.FileInputStream
 import java.time.LocalDate
@@ -95,23 +100,32 @@ object Utils {
     fun getCompressBitmap(imagePath: String,chooseOption:Int):Bitmap{
         return getBitmap(imagePath, chooseOption)
     }
-    /*
-    fun getBitmapUseGlide(){
+
+    fun getBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity ){
         if (item.imagePath.isNotEmpty()){
+
+            val options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+
+
             if (item.chooseOption== CHOOSE_CAMERA){
-                Glide.with(requireActivity())
+                BitmapFactory.decodeFile(item.imagePath, options)
+                val srcWidth = options.outWidth.toFloat()
+                val srcHeight = options.outHeight.toFloat()
+                Glide.with(activity)
                     .load(item.imagePath)
-                    .into(holder.itemImage)
+                    .apply(RequestOptions().override(600, 200))
+                    .into(imageView)
 
             }else if (item.chooseOption== CHOOSE_GALLERY){
-                Glide.with(requireActivity())
+
+                Glide.with(activity)
                     .load(item.imagePath.toUri())
-                    .into(holder.itemImage)
+                    .into(imageView)
             }
         }
     }
 
-     */
 
     /*
     @SuppressLint("Range")
@@ -190,4 +204,41 @@ object Utils {
     }
 
      */
+}
+
+//https://cloud.tencent.com/developer/article/1736763
+class TransformationUtils(target: ImageView) : ImageViewTarget<Bitmap?>(target) {
+    private val target: ImageView
+
+    init {
+        this.target = target
+    }
+
+    override fun setResource(resource: Bitmap?) {
+        resource?.let {
+            view.setImageBitmap(resource)
+
+            val width: Int = resource.width
+            val height: Int = resource.height
+
+            val targetWidth = 300f
+            val targetHeight= 300f
+
+            var inSampleSize = 1f
+            if (height > targetHeight || width > targetHeight) {
+                inSampleSize = if (width > height) {
+                    (width.toFloat() / targetWidth)
+                } else {
+                    (height.toFloat() / targetHeight)
+                }
+            }
+            val imageViewHeight = (height * inSampleSize).toInt()
+            val imageViewWidth = (width * inSampleSize).toInt()
+            val params: ViewGroup.LayoutParams = target.layoutParams
+            params.height = imageViewHeight
+            params.width = imageViewWidth
+            target.layoutParams = params
+        }
+
+    }
 }

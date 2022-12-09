@@ -24,14 +24,14 @@
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
-    <show-object-properties value="true" />
+    <show-object-properties value="false" />
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="b7e5e31c-4567-4b8a-85ce-f55bb5aac0e0">
-      <console name="Connection" type="STANDARD" schema="main" session="Main" />
+    <connection id="6148a1a1-8480-44f3-b0c1-262ba2151277">
+      <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
-    <connection id="4b871b6a-07e4-4cd2-8528-c8151413a394">
+    <connection id="db8fd104-3bb4-4864-9435-5dedef6dbec3">
       <console name="Connection 1" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
@@ -80,7 +80,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="b7e5e31c-4567-4b8a-85ce-f55bb5aac0e0" active="true" signed="true">
+      <connection id="6148a1a1-8480-44f3-b0c1-262ba2151277" active="true" signed="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -95,7 +95,7 @@
           <port value="" />
           <database value="" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\Items.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\items.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -167,7 +167,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="4b871b6a-07e4-4cd2-8528-c8151413a394" active="true" signed="true">
+      <connection id="db8fd104-3bb4-4864-9435-5dedef6dbec3" active="true" signed="true">
         <database>
           <name value="Connection 1" />
           <description value="" />

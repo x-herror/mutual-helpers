@@ -2,16 +2,15 @@ package top.xherror.mutualhelpers
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import top.xherror.mutualhelpers.databinding.ActivityItemBinding
-import top.xherror.mutualhelpers.databinding.ActivityMainBinding
 
 class ItemActivity : BaseActivity() {
 
     companion object {
-        //TODO:use unique id replace this
         lateinit var showEntityItem: EntityItem
         fun actionStart(context: Context){
             context.startActivity(Intent(context,ItemActivity::class.java))
@@ -27,17 +26,17 @@ class ItemActivity : BaseActivity() {
         binding.activityItemEditTextLocation.text=showEntityItem.location
         binding.activityItemEditTextTime.text=showEntityItem.time
         binding.activityItemEditTextPhone.text=showEntityItem.phone
-        /*
-        val id=intent.getIntExtra("id",0)
-        val tuple=Utils.getTuple(id)
-        val bitmap=Utils.getBitmap(tuple.imagePath,tuple.chooseOption)
-        binding.activityItemImage.setImageBitmap(bitmap)
-        binding.activityItemEditTextName.text=tuple.name
-        binding.activityItemEditTextLocation.text=tuple.location
-        binding.activityItemEditTextTime.text=tuple.time
-        binding.activityItemEditTextPhone.text=tuple.phone
-        if (tuple.description!=""){ binding.activityItemEditTextDescription.text=tuple.description }
-
-         */
+        binding.activityItemEditTextCategory.text= showEntityItem.category
+        val gson=Gson()
+        val mapType= object:TypeToken<Map<String, String>>(){ }.type
+        val attrMap:Map<String,String> = gson.fromJson(showEntityItem.attributes,mapType)
+        attrMap.onEach {
+            val keyView = TextView(this)
+            keyView.text=it.key
+            binding.activityItemAttributesLinearLayout.addView(keyView)
+            val valueView = TextView(this)
+            valueView.text=it.value
+            binding.activityItemAttributesLinearLayout.addView(valueView)
+        }
     }
 }

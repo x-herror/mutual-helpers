@@ -1,141 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddItemActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/tv_help_title"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:background="@color/colorPrimary"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="start|center_vertical"
-        android:paddingStart="10dp"
-        android:text="选择图片"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_help_image_first"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:src="@mipmap/ic_upload_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_help_title" />
-
-    <ImageView
-        android:id="@+id/iv_help_image_first_delete"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@mipmap/ic_delete_image"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/iv_help_image_first"
-        app:layout_constraintEnd_toEndOf="@id/iv_help_image_first" />
-
-    <TextView
-        android:id="@+id/activityAddItemTextViewName"
-        android:text="名字(必填)"
-        android:textSize="20dp"
-        android:textColor="@color/Red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/iv_help_image_first"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-    <EditText
-        android:id="@+id/activityAddItemEditTextName"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewName"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_height="match_parent"
+        tools:context=".AddItemActivity">
 
-    <TextView
-        android:id="@+id/activityAddItemTextViewLocation"
-        android:text="地点(必填)"
-        android:textSize="20dp"
-        android:textColor="@color/Red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextName"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/tv_help_title"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@color/colorPrimary"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="start|center_vertical"
+            android:paddingStart="10dp"
+            android:text="选择图片"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/activityAddItemEditTextLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewLocation"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <ImageView
+            android:id="@+id/iv_help_image_first"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:src="@mipmap/ic_upload_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_help_title" />
 
-    <TextView
-        android:id="@+id/activityAddItemTextViewPhone"
-        android:text="手机(必填)"
-        android:textSize="20dp"
-        android:textColor="@color/Red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <ImageView
+            android:id="@+id/iv_help_image_first_delete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/ic_delete_image"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_help_image_first"
+            app:layout_constraintEnd_toEndOf="@id/iv_help_image_first" />
 
-    <EditText
-        android:id="@+id/activityAddItemEditTextPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewPhone"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <TextView
+            android:id="@+id/activityAddItemTextViewName"
+            android:text="名字(必填)"
+            android:textSize="20dp"
+            android:textColor="@color/Red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/iv_help_image_first"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <Spinner
-        android:id="@+id/activityAddItemSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextPhone"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        <EditText
+            android:id="@+id/activityAddItemEditTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewName"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/activityAddItemSpinnerLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemSpinner"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:orientation="vertical" />
+        <TextView
+            android:id="@+id/activityAddItemTextViewLocation"
+            android:text="地点(必填)"
+            android:textSize="20dp"
+            android:textColor="@color/Red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextName"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <EditText
+            android:id="@+id/activityAddItemEditTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewLocation"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/activityAddItemTextViewPhone"
+            android:text="手机(必填)"
+            android:textSize="20dp"
+            android:textColor="@color/Red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <EditText
+            android:id="@+id/activityAddItemEditTextPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewPhone"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <Spinner
+            android:id="@+id/activityAddItemSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextPhone"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/activityAddItemSpinnerLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemSpinner"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/activityAddItemTextViewDescription"
+            android:text="描述"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemSpinnerLinearLayout"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <EditText
+            android:id="@+id/activityAddItemEditTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewDescription"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <Button
+            android:id="@+id/activityAddItemButtonGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提交"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextDescription"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
 
 
-    <TextView
-        android:id="@+id/activityAddItemTextViewDescription"
-        android:text="描述"
-        android:textSize="20dp"
-        android:textColor="@color/colorPrimary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemSpinnerLinearLayout"
-        app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <EditText
-        android:id="@+id/activityAddItemEditTextDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewDescription"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <Button
-        android:id="@+id/activityAddItemButtonGo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="提交"
-        app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextDescription"
-        app:layout_constraintLeft_toLeftOf="parent"/>
-
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
