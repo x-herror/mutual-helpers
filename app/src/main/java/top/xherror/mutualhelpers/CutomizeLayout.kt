@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
 
-class Item(val id:Int,val name:String,val bitmap:Bitmap?,val location:String,val time:String)
-class Tuple(val id :Int,val name :String,val imagePath :String,val location :String,val time :String,val phone :String,val owner :String,val description :String,val chooseOption :Int)
 class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<FirstAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -27,8 +26,9 @@ class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<F
             val position = viewHolder.adapterPosition
             val item = itemList[position]
             ItemActivity.showEntityItem=item
-            actionStart(parent.context)
+            ItemActivity.actionStart(parent.context)
         }
+
         return viewHolder
     }
 
@@ -42,4 +42,3 @@ class FirstAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<F
 
     override fun getItemCount() = itemList.size
 }
-

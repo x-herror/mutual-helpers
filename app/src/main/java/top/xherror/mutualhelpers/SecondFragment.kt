@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import top.xherror.mutualhelpers.ItemActivity.Companion.actionStart
@@ -31,6 +32,7 @@ class SecondFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private val adapter=SecondAdapter(DateBase.myItemList)
+    val categoryName= MY_CATEGORY
 
     fun addItem(item:EntityItem){
         DateBase.myItemList.add(item)
@@ -65,6 +67,26 @@ class SecondFragment : Fragment() {
         val layoutManager= LinearLayoutManager(requireActivity())
         fragmentFirstRecyclerView.layoutManager=layoutManager
         fragmentFirstRecyclerView.adapter=adapter
+        /*
+        val fragmentFirstSearchView: SearchView =view.findViewById(R.id.fragment_second_search_view)
+        fragmentFirstSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                query?.let {
+                    val thirdFragment=ThirdFragment.newInstance(categoryName,it)
+                    val activity=requireActivity() as MainActivity
+                    activity.replaceFragment(thirdFragment)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                return false
+            }
+        }
+        )
+
+         */
         return  view
     }
 
@@ -112,15 +134,15 @@ class SecondFragment : Fragment() {
                 val item = itemList[position]
                 val selectDialog = AlertDialog.Builder(parent.context).run {
                     setTitle("DELETE!")
-                    setMessage("确定删除?")
+                    setMessage("WARNING")
                     setCancelable(false)
-                    setPositiveButton("删除!"){
+                    setPositiveButton("COMMIT!"){
                             dialog,which->
                         removeItem(item)
-                        val activity=activity as MainActivity
-                        activity.getFirstFragment().removeItem(item)
+                        val category=DateBase.getCategory(item.category)
+                        category?.notifyItemDelete(item)
                     }
-                    setNegativeButton("算了."){
+                    setNegativeButton("CANCEL."){
                             dialog,which->
                     }
                     show()

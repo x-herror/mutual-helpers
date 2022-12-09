@@ -30,13 +30,8 @@ import kotlin.math.log
 class MainActivity : BaseActivity() {
     private val tag="MainActivity"
     private lateinit var mainFragment:MainFragment
-    private lateinit var firstFragment:FirstFragment
-    private lateinit var secondFragment:SecondFragment
+    //private lateinit var secondFragment:SecondFragment
     private lateinit var settingFragment:SettingFragment
-    @JvmName("getFirstFragment1")
-    fun getFirstFragment():FirstFragment{
-        return firstFragment
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +39,7 @@ class MainActivity : BaseActivity() {
         val date= Date(System.currentTimeMillis())
         val simpleDateFormat= SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
         val timeP=simpleDateFormat.format(date)
+
 
 
         /*
@@ -56,15 +52,15 @@ class MainActivity : BaseActivity() {
                 phone= "18759628434",
                 ownerAccount= "admin00",
                 ownerName= "xherror",
-                attributes= DEFAULT_ATTRIBUTES)
-
+                attributes= DEFAULT_ATTRIBUTES,
+                description ="")
         DateBase.insertItems(entityItem)
         val itemList=DateBase.getAll()
         Log.d(tag,itemList.toString())
         */
+
         mainFragment=MainFragment()
-        firstFragment=FirstFragment()
-        secondFragment=SecondFragment()
+        //secondFragment=SecondFragment()
         settingFragment=SettingFragment()
         setContentView(binding.root)
         //MAIN界面
@@ -74,7 +70,7 @@ class MainActivity : BaseActivity() {
 
         //MY界面
         binding.buttonToSecond.setOnClickListener {
-            replaceFragment(secondFragment)
+            replaceFragment(SecondFragment())
         }
 
         binding.buttonToSetting.setOnClickListener {
@@ -110,6 +106,7 @@ class MainActivity : BaseActivity() {
                      */
                     //firstFragment.addItem(addEntityItem)
                     //secondFragment.addItem(addEntityItem)
+
                 }
             }
         }
@@ -120,6 +117,7 @@ class MainActivity : BaseActivity() {
         }
 
         //搜索界面
+        /*
         binding.searchBar.setOnQueryTextListener(object:androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
@@ -134,6 +132,9 @@ class MainActivity : BaseActivity() {
                 return false
             }
         })
+
+         */
+
         //显示MAIN界面
         replaceFragment(mainFragment)
     }
@@ -144,7 +145,7 @@ class MainActivity : BaseActivity() {
         val fragmentManager = supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayout, fragment)
-        if (fragment is FirstFragment ) transaction.addToBackStack(null)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 

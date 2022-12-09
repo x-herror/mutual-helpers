@@ -20,26 +20,9 @@ import org.jetbrains.exposed.sql.Table
 import java.io.File
 import java.io.Serializable
 
-
-class MyDBHelper(val name:String, val version:Int):
-    SQLiteOpenHelper(MyApplication.getContext(), name, null, version) {
-    //begin with one
-    private val createMyItems=
-        "CREATE table MyItems(id integer primary key autoincrement,name string,imagePath string,location string,time string,phone string,owner string,description string,chooseOption integer)"
-
-    override fun onCreate(db: SQLiteDatabase?) {
-        settingdb.putInt("version",1)
-        db?.execSQL(createMyItems)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-    }
-}
-
 const val DATABASE_NAME="items.db"
 object DateBase {
     val tag="DateBase"
-    lateinit var myDBHelper:MyDBHelper
     lateinit var categorydb:TinyDB
     val categoryList=ArrayList<Category>()
     lateinit var myItemList:ArrayList<EntityItem>
@@ -53,9 +36,7 @@ object DateBase {
             AppDatabase::class.java, DATABASE_NAME
         ).allowMainThreadQueries().build()
 
-        itemDao = DateBase.db.itemDao()
-
-        myDBHelper=MyDBHelper(name, version)
+        itemDao = db.itemDao()
 
         myItemList= ArrayList(itemDao.getMyItems(person.account))
 
@@ -105,6 +86,23 @@ object DateBase {
 
     fun getCategory(name:String)=categoryList.find { it.name==name }
 
+    fun getMyItemSearchResult(searchString:String):ArrayList<EntityItem>{
+        //TODO:模糊搜索,ES,轻量NN
+        val array=ArrayList<EntityItem>()
+        for (index :Int in myItemList.lastIndex downTo 0) {
+            if (searchString in myItemList[index].attributes||searchString in myItemList[index].name||searchString in myItemList[index].description) array.add(myItemList[index])
+        }
+        return  array
+    }
+
+    fun notifyMyItemAdd(addEntityItem:EntityItem){
+        myItemList.add(addEntityItem)
+    }
+
+    fun notifyMyItemDelete(deleteEntityItem: EntityItem){
+        myItemList.remove(deleteEntityItem)
+    }
+
 }
 
 @androidx.room.Database(entities = [EntityItem::class], version = 1,exportSchema = false)
@@ -127,6 +125,7 @@ data class EntityItem (
     @ColumnInfo(name = "ownerAccount") var ownerAccount:String,
     @ColumnInfo(name = "ownerName") var ownerName:String,
     @ColumnInfo(name = "attributes") var attributes:String,
+    @ColumnInfo(name = "description") var description:String,
 )
 
 @Dao

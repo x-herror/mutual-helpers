@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.hardware.biometrics.BiometricManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import java.io.BufferedInputStream
 import java.io.FileInputStream
@@ -94,6 +95,23 @@ object Utils {
     fun getCompressBitmap(imagePath: String,chooseOption:Int):Bitmap{
         return getBitmap(imagePath, chooseOption)
     }
+    /*
+    fun getBitmapUseGlide(){
+        if (item.imagePath.isNotEmpty()){
+            if (item.chooseOption== CHOOSE_CAMERA){
+                Glide.with(requireActivity())
+                    .load(item.imagePath)
+                    .into(holder.itemImage)
+
+            }else if (item.chooseOption== CHOOSE_GALLERY){
+                Glide.with(requireActivity())
+                    .load(item.imagePath.toUri())
+                    .into(holder.itemImage)
+            }
+        }
+    }
+
+     */
 
     /*
     @SuppressLint("Range")

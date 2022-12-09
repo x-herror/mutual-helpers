@@ -27,6 +27,7 @@ import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
+import org.sqlite.core.DB
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
 import java.io.*
 import java.text.SimpleDateFormat
@@ -207,7 +208,8 @@ class AddItemActivity : BaseActivity() {
                     phone= phone,
                     ownerAccount= ownerAccount,
                     ownerName= ownerName,
-                    attributes= json)
+                    attributes= json,
+                    description = description )
 
                 DateBase.insertItems(entityItem)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
@@ -224,6 +226,9 @@ class AddItemActivity : BaseActivity() {
                 }
 
                  */
+                val category=DateBase.getCategory(categoryName)
+                category?.notifyItemAdd(entityItem)
+                DateBase.notifyMyItemAdd(entityItem)
                 setResult(RESULT_OK,intent)
                 finish()
             }else{

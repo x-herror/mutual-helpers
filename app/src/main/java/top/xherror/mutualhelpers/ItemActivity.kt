@@ -22,7 +22,7 @@ class ItemActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.activityItemImage.setImageBitmap(Utils.getBitmap(showEntityItem.imagePath, showEntityItem.chooseOption))
+        if (showEntityItem.imagePath.isNotEmpty()) binding.activityItemImage.setImageBitmap(Utils.getBitmap(showEntityItem.imagePath, showEntityItem.chooseOption))
         binding.activityItemEditTextName.text= showEntityItem.name
         binding.activityItemEditTextLocation.text=showEntityItem.location
         binding.activityItemEditTextTime.text=showEntityItem.time

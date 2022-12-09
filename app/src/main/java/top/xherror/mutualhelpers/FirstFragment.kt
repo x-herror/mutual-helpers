@@ -1,13 +1,16 @@
 package top.xherror.mutualhelpers
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.bumptech.glide.Glide
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -57,6 +60,23 @@ class FirstFragment : Fragment() {
         val layoutManager=StaggeredGridLayoutManager(2,     StaggeredGridLayoutManager.VERTICAL)
         fragmentFirstRecyclerView.layoutManager=layoutManager
         fragmentFirstRecyclerView.adapter=adapter
+        val fragmentFirstSearchView: SearchView =view.findViewById(R.id.fragment_first_search_view)
+        fragmentFirstSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                query?.let {
+                    val thirdFragment=ThirdFragment.newInstance(categoryName!!,it)
+                    val activity=requireActivity() as MainActivity
+                    activity.replaceFragment(thirdFragment)
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                return false
+            }
+        }
+        )
 
         return  view
     }
@@ -77,5 +97,6 @@ class FirstFragment : Fragment() {
                 }
             }
     }
+
 }
 
