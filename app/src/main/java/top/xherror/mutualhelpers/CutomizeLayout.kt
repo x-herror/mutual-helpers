@@ -35,7 +35,7 @@ class FirstAdapter(val itemList: ArrayList<EntityItem>,val activity:BaseActivity
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
-        Utils.setBitmapUseGlide(item,holder.itemImage, activity)
+        Utils.setBitmapUseGlide(item,holder.itemImage, activity,holder.itemImage.width,holder.itemImage.height)
         holder.itemName.text = item.name
         holder.itemLocation.text=item.location
         holder.itemTime.text=item.time

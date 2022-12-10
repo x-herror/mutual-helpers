@@ -186,17 +186,23 @@ class AddItemActivity : BaseActivity() {
                 var imagePath=""
                 val description=binding.activityAddItemEditTextDescription.text.toString()
                 val time=simpleDateFormat.format(date)
-
+                val options = BitmapFactory.Options()
+                options.inJustDecodeBounds = true
                 when (chooseOption){
                     CHOOSE_GALLERY->{
                         bitmap?.let {
                             val saveTime=saveDateFormat.format(date)
                             val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
                             imagePath = saveBitmap(imageName,it,this)
+
+                            BitmapFactory.decodeFile(imagePath, options)
                         }
                     }
                     CHOOSE_CAMERA->{
                         imagePath=imgPath
+
+                        val bis= BufferedInputStream(FileInputStream(imagePath))
+                        BitmapFactory.decodeStream(bis,null,options)
                     }
                 }
 
@@ -205,10 +211,10 @@ class AddItemActivity : BaseActivity() {
                     location= location,
                     time= time,
                     imagePath = imagePath,
-                    chooseOption= chooseOption,
+                    imageWidth = options.outWidth ,
+                    imageHeight = options.outHeight,
                     phone= phone,
                     ownerAccount= ownerAccount,
-                    ownerName= ownerName,
                     attributes= json,
                     description = description )
 

@@ -101,13 +101,7 @@ class SecondFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SecondFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = SecondFragment()
     }
 
     inner class SecondAdapter(val itemList: ArrayList<EntityItem>) : RecyclerView.Adapter<SecondAdapter.ViewHolder>() {
@@ -153,7 +147,8 @@ class SecondFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = itemList[position]
-            if (item.imagePath.isNotEmpty()) holder.itemImage.setImageBitmap(Utils.getBitmap(item.imagePath,item.chooseOption))
+            //if (item.imagePath.isNotEmpty()) holder.itemImage.setImageBitmap(Utils.getBitmap(item.imagePath,item.chooseOption))
+            Utils.setBitmapUseGlide(item,holder.itemImage,requireActivity() as BaseActivity,holder.itemImage.width,holder.itemImage.height)
             holder.itemName.text = item.name
             holder.itemLocation.text=item.location
             holder.itemTime.text=item.time

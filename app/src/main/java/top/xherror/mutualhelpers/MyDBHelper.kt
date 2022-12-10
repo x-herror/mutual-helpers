@@ -114,16 +114,16 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey(autoGenerate = true) val id: Int=0,
+    @PrimaryKey(autoGenerate = true) var id: Int=0,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,
     @ColumnInfo(name = "time") var time:String,
     @ColumnInfo(name = "imagePath") var imagePath:String,
-    @ColumnInfo(name = "chooseOption") var chooseOption:Int,
+    @ColumnInfo(name = "imageWidth") var imageWidth:Int,
+    @ColumnInfo(name = "imageHeight") var imageHeight:Int,
     @ColumnInfo(name = "phone") var phone:String,
     @ColumnInfo(name = "ownerAccount") var ownerAccount:String,
-    @ColumnInfo(name = "ownerName") var ownerName:String,
     @ColumnInfo(name = "attributes") var attributes:String,
     @ColumnInfo(name = "description") var description:String,
 )

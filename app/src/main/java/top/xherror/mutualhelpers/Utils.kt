@@ -101,39 +101,35 @@ object Utils {
         return getBitmap(imagePath, chooseOption)
     }
 
-    fun setBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity ){
+    fun setBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity,viewWidth:Int=-1,viewHeight: Int=-1){
 
-        val targetWidth= 300f
-        val targetHeight= 300f
-
+        val targetWidth=viewWidth.toFloat()
+        val targetHeight=viewHeight.toFloat()
         if (item.imagePath.isNotEmpty()){
-
-            val options = BitmapFactory.Options()
-            options.inJustDecodeBounds = true
-
-            if (item.chooseOption == CHOOSE_CAMERA){
-                val bis= BufferedInputStream(FileInputStream(item.imagePath))
-                BitmapFactory.decodeStream(bis,null,options)
-            }else if (item.chooseOption == CHOOSE_GALLERY){
-                BitmapFactory.decodeFile(item.imagePath, options)
-            }
-            val width = options.outWidth.toFloat()
-            val height = options.outHeight.toFloat()
-            var inSampleSize = 1f
-            if (height > targetHeight || width > targetHeight) {
-                inSampleSize = if (width > height) {
-                    (width / targetWidth)
-                } else {
-                    (height / targetHeight)
+            if (viewWidth!=-1&&viewHeight!=-1){
+                val width = item.imageWidth.toFloat()
+                val height = item. imageHeight.toFloat()
+                var inSampleSize = 1f
+                if (height > targetHeight || width > targetHeight) {
+                    inSampleSize = if (width > height) {
+                        (width / targetWidth)
+                    } else {
+                        (height / targetHeight)
+                    }
                 }
-            }
-            val resultWidth = (width/inSampleSize).toInt()
-            val resultHeight = (height/inSampleSize).toInt()
+                val resultWidth = (width/inSampleSize).toInt()
+                val resultHeight = (height/inSampleSize).toInt()
 
-            Glide.with(activity)
-                .load(item.imagePath)
-                .apply(RequestOptions().override(resultWidth, resultHeight))
-                .into(imageView)
+                Glide.with(activity)
+                    .load(item.imagePath)
+                    .apply(RequestOptions().override(resultWidth, resultHeight))
+                    .into(imageView)
+            }else{
+                Glide.with(activity)
+                    .load(item.imagePath)
+                    .into(imageView)
+            }
+
         }
     }
 
