@@ -11,7 +11,7 @@ func main() {
 	router.GET("/items", getItems)
 	router.GET("/items/:category", getItem)
 	router.POST("/items", addItem)
-	router.Run("localhost:8083")
+	router.Run()
 }
 
 func getItems(c *gin.Context) {

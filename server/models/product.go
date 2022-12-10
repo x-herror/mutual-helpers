@@ -10,15 +10,20 @@ type Item struct {
 	Id           int    `json:"id"`
 	Name         string `json:"name"`
 	Category     string `json:"category"`
-	Location     string `json:"Location"`
+	Location     string `json:"location"`
 	Time         string `json:"time"`
-	ImagePath    string `json:"image_path"`
-	ImageWidth   int    `json:"image_width"`
-	ImageHeight  int    `json:"image_height"`
+	ImagePath    string `json:"imagePath"`
+	ImageWidth   int    `json:"imageWidth"`
+	ImageHeight  int    `json:"imageHeight"`
 	Phone        string `json:"phone"`
-	OwnerAccount string `json:"owner_account"`
+	OwnerAccount string `json:"ownerAccount"`
 	Attributes   string `json:"attributes"`
 	Description  string `json:"description"`
+}
+
+type Test struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 /*
