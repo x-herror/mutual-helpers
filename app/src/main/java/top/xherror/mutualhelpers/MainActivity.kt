@@ -70,7 +70,7 @@ class MainActivity : BaseActivity() {
 
         //MY界面
         binding.buttonToSecond.setOnClickListener {
-            replaceFragment(SecondFragment())
+            replaceFragment(SecondFragment.newInstance())
         }
 
         binding.buttonToSetting.setOnClickListener {
