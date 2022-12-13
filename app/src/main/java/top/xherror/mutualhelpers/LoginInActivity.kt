@@ -13,6 +13,7 @@ import java.util.ArrayList
 lateinit var persondb:TinyDB
 lateinit var settingdb:TinyDB
 lateinit var person:Person
+lateinit var remoteHelper:RemoteHelper
 class LoginInActivity : BaseActivity() {
     val tag="loginIn"
     override fun onCreate(savedInstanceState: Bundle?) {
