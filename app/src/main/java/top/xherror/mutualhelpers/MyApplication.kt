@@ -12,8 +12,7 @@ class MyApplication : Application() {
         val rememberdb=TinyDB(applicationContext,"rememberList")
         person= Person(rememberdb.getString("rememberAccount"),rememberdb.getListString(rememberdb.getString("rememberAccount")))
         DateBase.init(DATABASE_NAME,1)
-        val remoteHelper=RemoteHelper()
-        //remoteHelper.getItems()
+        remoteHelper=RemoteHelper()
     }
 
 

@@ -36,29 +36,25 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
+        /*
         val date= Date(System.currentTimeMillis())
         val simpleDateFormat= SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
         val timeP=simpleDateFormat.format(date)
-
-
-
-        /*
-        val entityItem=EntityItem(name = "apple",
+        val entityItem=EntityItem(name = "banana",
                 category = DEFAULT_CATEGORY,
                 location= "SJTU",
                 time= timeP,
                 imagePath = "",
-                chooseOption= CHOOSE_GALLERY,
+                imageWidth = -1,
+                imageHeight = -1,
                 phone= "18759628434",
                 ownerAccount= "admin00",
-                ownerName= "xherror",
                 attributes= DEFAULT_ATTRIBUTES,
                 description ="")
-        DateBase.insertItems(entityItem)
-        val itemList=DateBase.getAll()
-        Log.d(tag,itemList.toString())
-        */
+        remoteHelper.addItem(entityItem)
 
+         */
+        remoteHelper.addImage("/data/data/top.xherror.mutualhelpers/files/camera/1670427710120.png")
         mainFragment=MainFragment()
         //secondFragment=SecondFragment()
         settingFragment=SettingFragment()
