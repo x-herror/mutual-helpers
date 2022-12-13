@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
         remoteHelper.addItem(entityItem)
 
          */
-
+        remoteHelper.addImage("/data/data/top.xherror.mutualhelpers/files/camera/1670427710120.png")
         mainFragment=MainFragment()
         //secondFragment=SecondFragment()
         settingFragment=SettingFragment()
