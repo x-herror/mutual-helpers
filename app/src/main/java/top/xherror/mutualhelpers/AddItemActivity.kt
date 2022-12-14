@@ -38,8 +38,8 @@ class AddItemActivity : BaseActivity() {
     private val tag="AddItemActivity"
     var imgPath = ""
     lateinit var uri: Uri
-    @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         var bitmap: Bitmap?=null
         //0 for Gallery
@@ -132,23 +132,24 @@ class AddItemActivity : BaseActivity() {
         }
 
         //选择框
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter<String>(this, R.layout.simple_dropdown_item)
         val editTextList=ArrayList<EditText>()
         val categoryList=DateBase.getCategoryNameList()
         var attributes =ArrayList<String>()
         var categoryName=""
-        attributes.add(DEFAULT_ATTRIBUTES)
+        //attributes.add(DEFAULT_ATTRIBUTES)
         adapter.addAll(categoryList)
         binding.activityAddItemSpinner.adapter = adapter
         binding.activityAddItemSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                binding.activityAddItemSpinnerLinearLayout.removeAllViews()
                 categoryName=categoryList[pos]
                 DateBase.getCategory(categoryName)?.attributes?.let { attributes = it }
                 attributes.onEach {
-                    binding.activityAddItemSpinnerLinearLayout.removeAllViews()
                     val widget=addTextView()
                     widget.text=it
+                    widget.setTextColor(resources.getColor(R.color.pink,theme))
                     binding.activityAddItemSpinnerLinearLayout.addView(widget)
                     val editText=addEditView()
                     binding.activityAddItemSpinnerLinearLayout.addView(editText)
@@ -322,13 +323,6 @@ class AddItemActivity : BaseActivity() {
                 }
             } finally {
                 cursor?.close()
-            }
-        }
-        if (result == null) {
-            result = uri.path.toString()
-            val cut = result!!.lastIndexOf('/')
-            if (cut != -1) {
-                result = result.substring(cut + 1)
             }
         }
         return result

@@ -17,19 +17,20 @@
             android:id="@+id/waitpersonType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text=""/>
         <TextView
             android:id="@+id/waitpersonName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text=""/>
-        <TextView
-            android:id="@+id/waitpersonPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""/>
-
     </LinearLayout>
+    <TextView
+        android:id="@+id/waitpersonPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,12 +40,15 @@
             android:id="@+id/waitpersonAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/blue"
             android:text="Accept" />
 
         <Button
             android:id="@+id/waitpersonReject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/pink"
+            android:layout_marginLeft="10dp"
             android:text="Reject" />
     </LinearLayout>
 

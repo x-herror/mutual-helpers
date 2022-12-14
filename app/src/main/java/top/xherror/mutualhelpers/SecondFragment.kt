@@ -151,7 +151,8 @@ class SecondFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = itemList[position]
             //if (item.imagePath.isNotEmpty()) holder.itemImage.setImageBitmap(Utils.getBitmap(item.imagePath,item.chooseOption))
-            Utils.setBitmapUseGlide(item,holder.itemImage,requireActivity() as BaseActivity,holder.itemImage.width,holder.itemImage.height)
+            val baseActivity = activity as BaseActivity
+            baseActivity.setBitmapUseGlide(item,holder.itemImage,requireActivity() as BaseActivity,holder.itemImage.width,holder.itemImage.height)
             holder.itemName.text = item.name
             holder.itemLocation.text=item.location
             holder.itemTime.text=item.time

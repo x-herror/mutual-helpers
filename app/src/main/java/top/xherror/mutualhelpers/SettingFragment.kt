@@ -29,7 +29,7 @@ class SettingFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    lateinit var waitdb:TinyDB
+
     private val waitpersonList = ArrayList<Person>()
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class SettingFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        waitdb=TinyDB(activity?.applicationContext  ,"waitList")
+
         initPersons()
     }
 
@@ -49,7 +49,7 @@ class SettingFragment : Fragment() {
         val view=inflater.inflate(R.layout.fragment_setting, container, false)
         val RV: RecyclerView =view.findViewById(R.id.fragmentSettingRecyclerView)
         val CT: Button = view.findViewById(R.id.fragmentSettingCategory)
-        if (person.type== ADMINTYPE){
+        if (person is Admin){
             val layoutManager= LinearLayoutManager(requireActivity())
             RV.layoutManager=layoutManager
             val adapter=PersonAdapter(waitpersonList)
@@ -61,7 +61,6 @@ class SettingFragment : Fragment() {
         val loginOut:Button=view.findViewById(R.id.fragmentSettingLoginOut)
         loginOut.setOnClickListener {
             person.reset()
-            val rememberdb=TinyDB(activity?.applicationContext ,"rememberList")
             rememberdb.clear()
             activity?.finish()
         }

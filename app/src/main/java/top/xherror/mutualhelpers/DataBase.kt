@@ -1,25 +1,8 @@
 package top.xherror.mutualhelpers
 
-import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
 import androidx.room.*
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.vendors.currentDialect
 import java.io.File
-import java.io.Serializable
 
 const val DATABASE_NAME="items.db"
 object DateBase {
@@ -29,6 +12,7 @@ object DateBase {
     lateinit var myItemList:ArrayList<EntityItem>
     lateinit var db:AppDatabase
     lateinit var itemDao:ItemDao
+    lateinit var remoteHelper:RemoteHelper
 
     fun init(name:String, version:Int){
 
@@ -36,19 +20,17 @@ object DateBase {
             MyApplication.getContext(),
             AppDatabase::class.java, DATABASE_NAME
         ).allowMainThreadQueries().build()
-
+        remoteHelper=RemoteHelper()
         itemDao = db.itemDao()
 
         myItemList= ArrayList(itemDao.getMyItems(person.account))
 
         categorydb= TinyDB(MyApplication.getContext(),"categoryList")
-
         if (categorydb.getListString(DEFAULT_CATEGORY).isEmpty()){
             val array=ArrayList<String>()
             array.add(DEFAULT_ATTRIBUTES)
             categorydb.putListString(DEFAULT_CATEGORY,array)
         }
-
         val categoryMap=categorydb.all
 
         for ((k,v) in categoryMap){
@@ -118,7 +100,7 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey(autoGenerate = true) var id: Int=1,
+    @PrimaryKey(autoGenerate = true)var id: Int=0,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,

@@ -6,8 +6,8 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-const val DEFAULT_CATEGORY="defaultCategory"
-const val DEFAULT_ATTRIBUTES="defaultAttributes"
+const val DEFAULT_CATEGORY="默认分组"
+const val DEFAULT_ATTRIBUTES="默认属性"
 const val MY_CATEGORY="myCategory"
 class Category(var name:String="",var attributes:ArrayList<String>) {
     val itemList=DateBase.getSpecialCategory(name)

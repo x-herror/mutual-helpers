@@ -9,19 +9,11 @@ import android.widget.Toast
 import top.xherror.mutualhelpers.databinding.ActivityLoginInBinding
 import java.util.ArrayList
 
-@SuppressLint("StaticFieldLeak")
-lateinit var persondb:TinyDB
-lateinit var settingdb:TinyDB
-lateinit var person:Person
+
 lateinit var remoteHelper:RemoteHelper
 class LoginInActivity : BaseActivity() {
     val tag="loginIn"
     override fun onCreate(savedInstanceState: Bundle?) {
-        persondb=TinyDB(applicationContext,"personList")
-        settingdb= TinyDB(applicationContext,"settingList")
-        adminInit()
-        val rememberdb=TinyDB(applicationContext,"rememberList")
-
         var isRemember=rememberdb.getBoolean("remember")
         super.onCreate(savedInstanceState)
         val binding = ActivityLoginInBinding.inflate(layoutInflater) //FirstLayoutBinding bind to name
@@ -49,7 +41,7 @@ class LoginInActivity : BaseActivity() {
             } else{
                 person= Person(inputAccount,arraylist)
                 val inputSecret=
-                    CommonUtils.createSignature(binding.activityLoginInPasswordEdit.text.toString(), KEY)
+                    MyApplication.createSignature(binding.activityLoginInPasswordEdit.text.toString(), KEY)
                 //success login in
                 if (person.password==inputSecret) {
 
@@ -92,14 +84,5 @@ class LoginInActivity : BaseActivity() {
         super.onResume()
     }
 
-    fun adminInit(){
-        val array=ArrayList<String>()
-        val saltPassword = CommonUtils.createSignature("123456",KEY)
-        array.add(saltPassword)
-        array.add(ADMINTYPE)
-        array.add("xherror")
-        array.add("18759628434")
-        if (persondb.getListString("admin00")!!.isEmpty())  persondb?.putListString("admin00",array)
-    }
 }
 

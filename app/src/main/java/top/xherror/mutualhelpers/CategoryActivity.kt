@@ -58,7 +58,7 @@ class AddCategoryActivity : AppCompatActivity() {
             builder.setPositiveButton("Commit") { _, _ ->
                 val name = nameInput.text.toString()
                 val attributes = attributesInput.text.toString()
-                val delimiter=","
+                val delimiter="-"
                 val array = ArrayList(attributes.split(delimiter))
                 Log.d(tag,"name:${name},array:${array}")
                 val category = Category(name, array)

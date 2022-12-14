@@ -18,9 +18,11 @@ class RegisterActivity : BaseActivity() {
         var accountAvailable=false
         var confirmAvailable=false
         var phoneAvailable=false
+        var nameAvailable=false
         val person = Person()
         val regexPassword=Regex("(?=.*[a-z])(?=.*[0-9])[\\w]{8,16}")
         val regexPhone=Regex("(?:(?:\\+|00)86)?1[3-9]\\d{9}")
+        val regexName=Regex("[0-9a-zA-Z-_=+]+")
         binding.activityRegisterAccountEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -29,14 +31,19 @@ class RegisterActivity : BaseActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                var arraylist= persondb?.getListString(s.toString())
-                if (arraylist!!.isEmpty()){
-                    accountAvailable=true
-                    binding.activityRegisterAccountHint.text="available"
-                    person.account=s.toString()
+                if (regexName.matches(s.toString())){
+                    var arraylist= persondb?.getListString(s.toString())
+                    if (arraylist!!.isEmpty()){
+                        accountAvailable=true
+                        binding.activityRegisterAccountHint.text="available"
+                        person.account=s.toString()
+                    }else{
+                        binding.activityRegisterAccountHint.text="account has been used"
+                    }
                 }else{
-                    binding.activityRegisterAccountHint.text="account has been used"
+                    binding.activityRegisterNameHint.text="account only can include numbers,letter,-_=+"
                 }
+
             }
         })
 
@@ -50,7 +57,7 @@ class RegisterActivity : BaseActivity() {
             override fun afterTextChanged(s: Editable?) {
                 if (regexPassword.matches(s.toString())){
                     passwordAvailable=true
-                    person.password=s.toString()
+                    person.password=MyApplication.createSignature(s.toString(),KEY)
                     binding.activityRegisterPasswordHint.text="password available"
                 }else{
                     binding.activityRegisterPasswordHint.text="password must include letters and numbers,with 8~16 characters long"
@@ -66,7 +73,7 @@ class RegisterActivity : BaseActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if (s.toString() == person.password){
+                if (MyApplication.createSignature(s.toString(),KEY) == person.password){
                     confirmAvailable=true
                     binding.activityRegisterConfirmHint.text="pass"
                 }else{
@@ -75,7 +82,25 @@ class RegisterActivity : BaseActivity() {
             }
         })
 
-        binding.activityRegisterNameEdit.setText(person.name)
+        binding.activityRegisterNameEdit.hint = person.name
+
+        binding.activityRegisterNameEdit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (regexName.matches(s.toString())){
+                    nameAvailable=true
+                    person.name=s.toString()
+                    binding.activityRegisterNameHint.text="pass"
+                }else{
+                    binding.activityRegisterNameHint.text="name only can include numbers,letter,-_=+"
+                }
+            }
+        })
 
         binding.activityRegisterPhoneEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -96,7 +121,7 @@ class RegisterActivity : BaseActivity() {
         })
 
         binding.activityRegisterButton.setOnClickListener {
-            if (passwordAvailable&&accountAvailable&&confirmAvailable&&phoneAvailable){
+            if (passwordAvailable&&accountAvailable&&confirmAvailable&&phoneAvailable&&nameAvailable){
                 if (binding.activityRegisterAdminRegister.isChecked) person.type="A"
                 val waitdb=TinyDB(applicationContext,"waitList")
                 waitdb.putListString(person.account, person.toList())

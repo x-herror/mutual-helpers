@@ -5,9 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import org.apache.commons.codec.binary.Hex
 import java.io.*
-
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 
 open class BaseActivity : AppCompatActivity() {
@@ -64,9 +69,11 @@ open class BaseActivity : AppCompatActivity() {
     private fun addActivity(activity: Activity){
         activities.add(activity)
     }
+
     private fun removeActivity(activity: Activity){
         activities.remove(activity)
     }
+
     private fun finishAll(){
         for (activity in activities){
             if(!activity.isFinishing){
@@ -76,8 +83,36 @@ open class BaseActivity : AppCompatActivity() {
         activities.clear()
     }
 
+    fun setBitmapUseGlide(item: EntityItem, imageView: ImageView, activity: BaseActivity, viewWidth:Int=-1, viewHeight: Int=-1){
 
+        val targetWidth=viewWidth.toFloat()
+        val targetHeight=viewHeight.toFloat()
+        if (item.imageName.isNotEmpty()){
+            if (viewWidth!=-1&&viewHeight!=-1){
+                val width = item.imageWidth.toFloat()
+                val height = item. imageHeight.toFloat()
+                var inSampleSize = 1f
+                if (height > targetHeight || width > targetHeight) {
+                    inSampleSize = if (width > height) {
+                        (width / targetWidth)
+                    } else {
+                        (height / targetHeight)
+                    }
+                }
+                val resultWidth = (width/inSampleSize).toInt()
+                val resultHeight = (height/inSampleSize).toInt()
 
+                Glide.with(activity)
+                    .load("http://192.168.0.184:8080/images/${item.imageName}")
+                    .apply(RequestOptions().override(resultWidth, resultHeight))
+                    .into(imageView)
+            }else{
+                Glide.with(activity)
+                    .load("http://192.168.0.184:8080/images/${item.imageName}")
+                    .into(imageView)
+            }
 
+        }
+    }
 
 }

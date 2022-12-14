@@ -13,11 +13,13 @@
             android:id="@+id/fragmentSettingLoginOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/blue"
             android:text="Login out"/>
         <Button
             android:id="@+id/fragmentSettingCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/pink"
             android:text="Category"/>
 
 

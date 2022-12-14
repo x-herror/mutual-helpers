@@ -27,6 +27,7 @@ class FirstFragment : Fragment() {
     lateinit var adapter:FirstAdapter
     lateinit var category: Category
 
+    /*
     fun addItem(item:EntityItem){
         category.itemList.add(item)
         adapter.notifyItemInserted(category.itemList.size-1)
@@ -38,6 +39,8 @@ class FirstFragment : Fragment() {
         category.itemList.remove(item)
         adapter.notifyItemRemoved(category.itemList.size-1)
     }
+
+     */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

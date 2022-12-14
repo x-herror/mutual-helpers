@@ -101,40 +101,6 @@ object Utils {
         return getBitmap(imagePath, chooseOption)
     }
 
-    fun setBitmapUseGlide(item: EntityItem,imageView: ImageView,activity: BaseActivity,viewWidth:Int=-1,viewHeight: Int=-1){
-
-        val targetWidth=viewWidth.toFloat()
-        val targetHeight=viewHeight.toFloat()
-        if (item.imageName.isNotEmpty()){
-            if (viewWidth!=-1&&viewHeight!=-1){
-                val width = item.imageWidth.toFloat()
-                val height = item. imageHeight.toFloat()
-                var inSampleSize = 1f
-                if (height > targetHeight || width > targetHeight) {
-                    inSampleSize = if (width > height) {
-                        (width / targetWidth)
-                    } else {
-                        (height / targetHeight)
-                    }
-                }
-                val resultWidth = (width/inSampleSize).toInt()
-                val resultHeight = (height/inSampleSize).toInt()
-
-                Glide.with(activity)
-                    .load("http://192.168.0.184:8080/images/${item.imageName}")
-                    .apply(RequestOptions().override(resultWidth, resultHeight))
-                    .into(imageView)
-            }else{
-                Glide.with(activity)
-                    .load("http://192.168.0.184:8080/images/${item.imageName}")
-                    .into(imageView)
-            }
-
-        }
-    }
-
-
-
     /*
     @SuppressLint("Range")
     fun fillItemList(itemList: ArrayList<Item>,type:Int=1,searchString:String=""){
