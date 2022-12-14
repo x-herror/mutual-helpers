@@ -6,6 +6,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var Db *sql.DB
+
 type Item struct {
 	Id           int    `json:"id"`
 	Name         string `json:"name"`
@@ -42,21 +44,19 @@ CREATE TABLE items(
     `description` VARCHAR(255) NOT NULL
 ) ;
 */
-
-func GetItems() []Item {
+func init() {
 	dbuser := "root"
 	dbpass := "200430"
 	dbname := "mutualhelpers"
-	db, err := sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
-	// if there is an error opening the connection, handle it
+	var err error
+	Db, err = sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
 	if err != nil {
-		// simply print the error to the console
 		fmt.Println("Err", err.Error())
-		// returns nil on error
-		return nil
 	}
-	defer db.Close()
-	results, err := db.Query("SELECT * FROM items")
+}
+
+func GetItems() []Item {
+	results, err := Db.Query("SELECT * FROM items")
 	if err != nil {
 		fmt.Println("Err", err.Error())
 		return nil
@@ -79,21 +79,9 @@ func GetItems() []Item {
 }
 
 func GetItem(category string) *Item {
-	dbuser := "root"
-	dbpass := "200430"
-	dbname := "mutualhelpers"
-	db, err := sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
 	prod := &Item{}
-	if err != nil {
-		// simply print the error to the console
-		fmt.Println("Err", err.Error())
-		// returns nil on error
-		return nil
-	}
 
-	defer db.Close()
-
-	results, err := db.Query("SELECT * FROM items where category=?", category)
+	results, err := Db.Query("SELECT * FROM items where category=?", category)
 
 	if err != nil {
 		fmt.Println("Err", err.Error())
@@ -114,20 +102,7 @@ func GetItem(category string) *Item {
 }
 
 func AddItem(item Item) {
-	dbuser := "root"
-	dbpass := "200430"
-	dbname := "mutualhelpers"
-	db, err := sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
-
-	if err != nil {
-		panic(any(err.Error()))
-	}
-
-	// defer the close till after this function has finished
-	// executing
-	defer db.Close()
-
-	insert, err := db.Query(
+	insert, err := Db.Query(
 		"INSERT INTO items (name,category,location,time,imagePath,imageWidth,imageHeight,phone,ownerAccount,attributes,description) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
 		item.Name, item.Category, item.Location, item.Time, item.ImagePath, item.ImageWidth, item.ImageHeight, item.Phone, item.OwnerAccount, item.Attributes, item.Description)
 
@@ -138,4 +113,22 @@ func AddItem(item Item) {
 
 	defer insert.Close()
 
+}
+
+func DeleteItem(id int) (*Item, error) {
+	prod := &Item{}
+	results, err := Db.Query("SELECT * FROM items where id=?", id)
+
+	err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImagePath, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description)
+	if err != nil {
+		return prod, err
+	}
+
+	_, err = Db.Query("DELETE FROM items where id=?", id)
+	if err != nil {
+		fmt.Println("Err", err.Error())
+		return prod, err
+	}
+
+	return prod, nil
 }
