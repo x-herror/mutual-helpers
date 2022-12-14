@@ -52,9 +52,8 @@ class MainActivity : BaseActivity() {
                 attributes= DEFAULT_ATTRIBUTES,
                 description ="")
         remoteHelper.addItem(entityItem)
-
-         */
         remoteHelper.addImage("/data/data/top.xherror.mutualhelpers/files/camera/1670427710120.png")
+         */
         mainFragment=MainFragment()
         //secondFragment=SecondFragment()
         settingFragment=SettingFragment()

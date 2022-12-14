@@ -17,6 +17,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.vendors.currentDialect
 import java.io.File
 import java.io.Serializable
 
@@ -58,16 +59,19 @@ object DateBase {
         Log.d(tag,categoryList.toString())
     }
 
-    fun insertItems(vararg items: EntityItem){
-        itemDao.insertItems(*items)
+    fun insertItem( item: EntityItem,file:File?){
+        itemDao.insertItems(item)
+        remoteHelper.addItem(item)
+        file?.let { remoteHelper.addImage(file) }
     }
 
+    //TODO:delete image
     fun deleteItems(vararg items: EntityItem){
         items.onEach {
-            val file=File(it.imagePath)
-            if (file.exists()){
-                file.delete()
-            }
+            //val file=File(it.imagePath)
+            //if (file.exists()){
+            //    file.delete()
+            //}
         }
         itemDao.deleteItems(*items)
     }
@@ -114,12 +118,12 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey(autoGenerate = true) var id: Int=-1,
+    @PrimaryKey(autoGenerate = true) var id: Int=1,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,
     @ColumnInfo(name = "time") var time:String,
-    @ColumnInfo(name = "imagePath") var imagePath:String,
+    @ColumnInfo(name = "imagePath") var imageName:String,
     @ColumnInfo(name = "imageWidth") var imageWidth:Int,
     @ColumnInfo(name = "imageHeight") var imageHeight:Int,
     @ColumnInfo(name = "phone") var phone:String,

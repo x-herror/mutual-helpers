@@ -34,11 +34,14 @@ class SecondFragment : Fragment() {
     private val adapter=SecondAdapter(DateBase.myItemList)
     val categoryName= MY_CATEGORY
 
+    /*
     fun addItem(item:EntityItem){
         DateBase.myItemList.add(item)
         adapter.notifyItemInserted(DateBase.myItemList.size-1)
         DateBase.insertItems(item)
     }
+
+     */
 
 
     fun removeItem(item:EntityItem,position:Int){

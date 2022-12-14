@@ -105,7 +105,7 @@ object Utils {
 
         val targetWidth=viewWidth.toFloat()
         val targetHeight=viewHeight.toFloat()
-        if (item.imagePath.isNotEmpty()){
+        if (item.imageName.isNotEmpty()){
             if (viewWidth!=-1&&viewHeight!=-1){
                 val width = item.imageWidth.toFloat()
                 val height = item. imageHeight.toFloat()
@@ -121,12 +121,12 @@ object Utils {
                 val resultHeight = (height/inSampleSize).toInt()
 
                 Glide.with(activity)
-                    .load(item.imagePath)
+                    .load("http://192.168.0.184:8080/images/${item.imageName}")
                     .apply(RequestOptions().override(resultWidth, resultHeight))
                     .into(imageView)
             }else{
                 Glide.with(activity)
-                    .load(item.imagePath)
+                    .load("http://192.168.0.184:8080/images/${item.imageName}")
                     .into(imageView)
             }
 

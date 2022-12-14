@@ -5,21 +5,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.service.chooser.ChooserTarget
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -28,12 +25,11 @@ import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.gson.Gson
-import org.sqlite.core.DB
 import top.xherror.mutualhelpers.databinding.ActivityAddItemBinding
 import java.io.*
+import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 private const val RESULT_LOAD_IMAGE = 1
@@ -41,6 +37,7 @@ private const val RESULT_CAMERA_IMAGE = 2
 class AddItemActivity : BaseActivity() {
     private val tag="AddItemActivity"
     var imgPath = ""
+    lateinit var uri: Uri
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +71,7 @@ class AddItemActivity : BaseActivity() {
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .into(binding.ivHelpImageFirst)
                             bitmap=getBitmapFromUri(it1)
+                            uri = it1
                         }
                         chooseOption= CHOOSE_GALLERY
                         binding.ivHelpImageFirstDelete.visibility = View.VISIBLE
@@ -121,7 +119,7 @@ class AddItemActivity : BaseActivity() {
             galleryButton.setOnClickListener {
                 selectDialog.dismiss()
                 val gallery = Intent(Intent.ACTION_PICK)
-                gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+                gallery.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
                 toGalleryActivity.launch(gallery)
             }
 
@@ -184,6 +182,8 @@ class AddItemActivity : BaseActivity() {
                 val ownerAccount= person.account
                 val ownerName= person.name
                 var imagePath=""
+                var imageName=""
+                var file:File?=null
                 val description=binding.activityAddItemEditTextDescription.text.toString()
                 val time=simpleDateFormat.format(date)
                 val options = BitmapFactory.Options()
@@ -191,16 +191,20 @@ class AddItemActivity : BaseActivity() {
                 when (chooseOption){
                     CHOOSE_GALLERY->{
                         bitmap?.let {
-                            val saveTime=saveDateFormat.format(date)
-                            val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
-                            imagePath = saveBitmap(imageName,it,this)
+                            imagePath=RealPathFromUriUtils.getRealPathFromUri(this,uri);
+                            file = File(imagePath)
+                            imageName =file!!.name
+                            //val saveTime=saveDateFormat.format(date)
+                            //val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
+                            //imagePath = saveBitmap(imageName,it,this)
 
-                            BitmapFactory.decodeFile(imagePath, options)
+                            BitmapFactory.decodeFile(uri.path, options)
                         }
                     }
                     CHOOSE_CAMERA->{
                         imagePath=imgPath
-
+                        file = File(imagePath)
+                        imageName = file?.name.toString()
                         val bis= BufferedInputStream(FileInputStream(imagePath))
                         BitmapFactory.decodeStream(bis,null,options)
                     }
@@ -210,7 +214,7 @@ class AddItemActivity : BaseActivity() {
                     category = categoryName,
                     location= location,
                     time= time,
-                    imagePath = imagePath,
+                    imageName = imageName,
                     imageWidth = options.outWidth ,
                     imageHeight = options.outHeight,
                     phone= phone,
@@ -218,7 +222,7 @@ class AddItemActivity : BaseActivity() {
                     attributes= json,
                     description = description )
 
-                DateBase.insertItems(entityItem)
+                DateBase.insertItem(entityItem,file)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
                 MainActivity.addEntityItem=entityItem
                 val intent=Intent()
@@ -276,8 +280,8 @@ class AddItemActivity : BaseActivity() {
     private fun openCamera():Intent{
         Log.d("CreatePicture", "Ready to create picture")
         val targetPath = getFileDir("camera")
-        val photoName = System.currentTimeMillis().toString() + ".png"
-        val picture = File(targetPath, photoName)
+        val imageName = System.currentTimeMillis().toString() + ".png"
+        val picture = File(targetPath, imageName)
         if (!picture.exists()) {
             try {
                 picture.createNewFile()
@@ -305,6 +309,46 @@ class AddItemActivity : BaseActivity() {
             file.mkdirs()
         }
         return path
+    }
+
+    @SuppressLint("Range")
+    fun getFileName(uri: Uri): String {
+        var result=""
+        if (uri.scheme == "content") {
+            val cursor: Cursor? = contentResolver.query(uri, null, null, null, null)
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+        if (result == null) {
+            result = uri.path.toString()
+            val cut = result!!.lastIndexOf('/')
+            if (cut != -1) {
+                result = result.substring(cut + 1)
+            }
+        }
+        return result
+    }
+
+    private fun getPath(context: Context, uri: Uri): String {
+        var result: String? = null
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = context.contentResolver.query(uri, proj, null, null, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                val column_index = cursor.getColumnIndexOrThrow(proj[0])
+                result = cursor.getString(column_index)
+            }
+            cursor.close()
+        }
+        if (result == null) {
+            result = "Not found"
+        }
+        return result
     }
 
 }

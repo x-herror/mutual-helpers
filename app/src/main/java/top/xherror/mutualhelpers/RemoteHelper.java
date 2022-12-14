@@ -54,9 +54,6 @@ interface DatabaseService{
     @POST("images")
     Call<ResponseBody> updateProfile(@Part("full_name") RequestBody fullName, @Part MultipartBody.Part image);
 
-    @Streaming
-    @GET("images/{imageName}")
-    Call<ResponseBody>  download(@Path("imageName") String imageName);
 }
 
 public class RemoteHelper {
@@ -112,9 +109,8 @@ public class RemoteHelper {
     }
 
     //https://stackoverflow.com/questions/39953457/how-to-upload-an-image-file-in-retrofit-2
-    public void addImage(String pathName){
+    public void addImage(File file){
         //pass it like this
-        File file = new File(pathName);
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
@@ -139,82 +135,4 @@ public class RemoteHelper {
             }
         });
     }
-
-
-    //https://cloud.tencent.com/developer/article/1742281
-    public  void download(String url, final String path, final DownloadListener downloadListener) {
-
-        Call<ResponseBody>  call = service.download(url);
-        call.enqueue(new Callback<ResponseBody> () {
-            @Override
-            public void onResponse(Call<ResponseBody>  call,final Response<ResponseBody>  response) {
-                //将Response写入到从磁盘中，详见下面分析
-                //注意，这个方法是运行在子线程中的
-                writeResponseToDisk(path, response, downloadListener);
-            }
-
-            @Override
-            public void onFailure( Call<ResponseBody>  call, Throwable throwable) {
-                downloadListener.onFail("网络错误～");
-            }
-        });
-    }
-
-    private static void writeResponseToDisk(String path, Response<ResponseBody  response, DownloadListener downloadListener) {
-        //从response获取输入流以及总大小
-        writeFileFromIS(new File(path), response.body().byteStream(), response.body().contentLength(), downloadListener);
-    }
-
-    private static int sBufferSize = 8192;
-
-    //将输入流写入文件
-    private static void writeFileFromIS(File file, InputStream is, long totalLength, DownloadListener downloadListener) {
-        //开始下载
-        downloadListener.onStart();
-
-        //创建文件
-        if (!file.exists()) {
-            if (!file.getParentFile().exists())
-                file.getParentFile().mkdir();
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                downloadListener.onFail("createNewFile IOException");
-            }
-        }
-
-        OutputStream os = null;
-        long currentLength = 0;
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(file));
-            byte data[] = new byte[sBufferSize];
-            int len;
-            while ((len = is.read(data, 0, sBufferSize)) != -1) {
-                os.write(data, 0, len);
-                currentLength += len;
-                //计算当前下载进度
-                downloadListener.onProgress((int) (100 * currentLength / totalLength));
-            }
-            //下载完成，并返回保存的文件路径
-            downloadListener.onFinish(file.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-            downloadListener.onFail("IOException");
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (os != null) {
-                    os.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }
