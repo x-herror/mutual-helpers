@@ -55,6 +55,10 @@ interface DatabaseService{
     @POST("images")
     Call<ResponseBody> updateProfile(@Part("full_name") RequestBody fullName, @Part MultipartBody.Part image);
 
+    @Multipart
+    @POST("avatars")
+    Call<ResponseBody> addAvatar(@Part MultipartBody.Part image);
+
     @GET("update")
     Call<ResponseBody> updateCheck(@Query("timeStamp") Integer timeStamp);
 
@@ -127,6 +131,29 @@ public class RemoteHelper {
                 RequestBody.create(MediaType.parse("multipart/form-data"), "Your Name");
 
         Call<ResponseBody> item=  service.updateProfile(fullName, body);
+        item.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.i("MainActivity","POST请求成功");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void addAvatar(File file){
+        //pass it like this
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("avatar", file.getName(), requestFile);
+
+        Call<ResponseBody> item=  service.addAvatar(body);
         item.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

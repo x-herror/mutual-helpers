@@ -22,7 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,9 +41,6 @@ private const val ARG_PARAM2 = "param2"
 class SettingFragment : Fragment() {
     lateinit var uri: Uri
     var bitmap: Bitmap?=null
-    //0 for Gallery
-    //1 for Camera
-    var chooseOption=-1
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -66,7 +66,14 @@ class SettingFragment : Fragment() {
         val RV: RecyclerView =view.findViewById(R.id.fragmentSettingRecyclerView)
         val CT: Button = view.findViewById(R.id.fragmentSettingCategory)
         val avatar :ImageView=view.findViewById(R.id.fragment_setting_avatar)
-
+        val name:TextView=view.findViewById(R.id.fragment_setting_name)
+        val phone:TextView=view.findViewById(R.id.fragment_setting_phone)
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        var imagePath=""
+        var imageName=""
+        var file:File?=null
+        //TODO:merge image process module
         //相册事件回调
         val toGalleryActivity =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -81,8 +88,16 @@ class SettingFragment : Fragment() {
                                 .into(avatar)
                             bitmap=getBitmapFromUri(it1)
                             uri = it1
+                            imagePath=RealPathFromUriUtils.getRealPathFromUri(requireActivity(),uri);
+                            file = File(imagePath)
+                            imageName =file!!.name
+                            BitmapFactory.decodeFile(imagePath, options)
+                            person.avatarName=imageName
+                            person.avatarWidth=options.outWidth
+                            person.avatarHeight=options.outHeight
+                            DateBase.updatePerson(person,file)
                         }
-                        chooseOption= CHOOSE_GALLERY
+
                     }
                     else -> {
                         Log.d("GalleryReturn", "error with resultCode: ${it.resultCode.toString()}")
@@ -100,7 +115,16 @@ class SettingFragment : Fragment() {
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .into(avatar)
-                        chooseOption= CHOOSE_CAMERA
+
+                        imagePath=imgPath
+                        file = File(imagePath)
+                        imageName = file?.name.toString()
+                        val bis= BufferedInputStream(FileInputStream(imagePath))
+                        BitmapFactory.decodeStream(bis,null,options)
+                        person.avatarName=imageName
+                        person.avatarWidth=options.outWidth
+                        person.avatarHeight=options.outHeight
+                        DateBase.updatePerson(person,file)
                     }
                     else -> {
                         Log.d("CameraReturn", "error with resultCode: ${it.resultCode.toString()}")
@@ -108,6 +132,8 @@ class SettingFragment : Fragment() {
                 }
             }
 
+        val activity=requireActivity() as BaseActivity
+        activity.setBitmapUseGlide(person,avatar,activity,avatar.width,avatar.height)
         avatar.setOnClickListener {
             val chooseTypeView =
                 LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_choose_pic_type, null)
@@ -153,6 +179,8 @@ class SettingFragment : Fragment() {
         CT.setOnClickListener {
             startActivity(Intent(activity,AddCategoryActivity::class.java))
         }
+        name.text= person.name
+        phone.text= person.phone
         return view
     }
 
@@ -267,4 +295,6 @@ class SettingFragment : Fragment() {
                 waitpersonList.add(person)
         }
     }
+
+
 }

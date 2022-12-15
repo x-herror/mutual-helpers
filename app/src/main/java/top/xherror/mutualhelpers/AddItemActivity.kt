@@ -200,8 +200,7 @@ class AddItemActivity : BaseActivity() {
                             //val saveTime=saveDateFormat.format(date)
                             //val imageName=saveTime.toString()+name+location+kotlin.random.Random.nextInt().toString()
                             //imagePath = saveBitmap(imageName,it,this)
-
-                            BitmapFactory.decodeFile(uri.path, options)
+                            BitmapFactory.decodeFile(imagePath, options)
                         }
                     }
                     CHOOSE_CAMERA->{

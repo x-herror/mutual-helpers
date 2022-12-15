@@ -48,6 +48,16 @@ object DateBase {
         remoteHelper.addItem(item)
         file?.let { remoteHelper.addImage(file) }
     }
+
+    fun updatePerson(person: Person,file:File?){
+        //TODO:insert person
+        persondb.putListString(person.account,person.toList())
+        if (rememberdb.getString("rememberAccount").isNotEmpty()){
+            rememberdb.putListString(person.account,person.toList())
+        }
+        file?.let { remoteHelper.addAvatar(file) }
+    }
+
     fun updateItem(item: EntityItem){
         itemDao.updateItems(item)
     }

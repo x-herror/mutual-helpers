@@ -49,16 +49,19 @@ class ItemActivity : BaseActivity() {
             valueView.text=it.value
             binding.activityItemAttributesLinearLayout.addView(valueView)
         }
-        val person= Person(showEntityItem.ownerAccount,persondb.getListString(showEntityItem.ownerAccount))
-        binding.activityItemPersonName.text=person.name
-        binding.activityItemPersonPhone.text=person.phone
+        val owner= Person(showEntityItem.ownerAccount,persondb.getListString(showEntityItem.ownerAccount))
+
+        binding.activityItemPersonName.text=owner.name
+        binding.activityItemPersonPhone.text=owner.phone
+        setBitmapUseGlide(owner,binding.activityItemAvatar, this ,binding.activityItemAvatar.width,binding.activityItemAvatar.height)
+
 
         val commentsMapType= object:TypeToken<HashMap<String, ArrayList<String>>>(){ }.type
         val commentsMap:HashMap<String,ArrayList<String>> = gson.fromJson(showEntityItem.comments,commentsMapType)
         commentsMap.onEach {
             val commentPerson=Person(it.key, persondb.getListString(it.key))
             it.value.onEach {
-                commentList.add(Comment("",commentPerson.name,it))
+                commentList.add(Comment(commentPerson,it))
             }
         }
 
@@ -87,7 +90,7 @@ class ItemActivity : BaseActivity() {
                     }else{
                         commentsMap[person.account]!!.add(comment)
                     }
-                    commentList.add(Comment("",person.name,comment))
+                    commentList.add(Comment(person,comment))
                     adapter.notifyItemInserted(commentList.size)
                     val commentsJson=gson.toJson(commentsMap)
                     showEntityItem.comments=commentsJson
@@ -123,12 +126,13 @@ class ItemActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val comment = commentsList[position]
-            holder.commentPersonName.text=comment.personName
+            holder.commentPersonName.text=comment.person.name
             holder.comment.text=comment.comment
+            setBitmapUseGlide(comment.person,holder.commentAvatar,activity,holder.commentAvatar.width,holder.commentAvatar.height)
         }
 
         override fun getItemCount() = commentsList.size
     }
 
-    inner class Comment(val imagePath:String,val personName:String,val comment:String)
+    inner class Comment(val person:Person,val comment:String)
 }

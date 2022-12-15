@@ -115,4 +115,37 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    fun setBitmapUseGlide(person:Person, imageView: ImageView, activity: BaseActivity, viewWidth:Int=-1, viewHeight: Int=-1){
+
+        val targetWidth=viewWidth.toFloat()
+        val targetHeight=viewHeight.toFloat()
+        if (person.avatarName.isNotEmpty()){
+            if (viewWidth!=-1&&viewHeight!=-1){
+                val width = person.avatarWidth.toFloat()
+                val height = person.avatarHeight.toFloat()
+                var inSampleSize = 1f
+                if (height > targetHeight || width > targetHeight) {
+                    inSampleSize = if (width > height) {
+                        (width / targetWidth)
+                    } else {
+                        (height / targetHeight)
+                    }
+                }
+                val resultWidth = (width/inSampleSize).toInt()
+                val resultHeight = (height/inSampleSize).toInt()
+
+                Glide.with(activity)
+                    .load("http://192.168.0.184:8080/avatars/${person.avatarName}")
+                    .apply(RequestOptions().override(resultWidth, resultHeight))
+                    .into(imageView)
+            }else{
+                Glide.with(activity)
+                    .load("http://192.168.0.184:8080/avatars/${person.avatarName}")
+                    .into(imageView)
+            }
+
+        }
+    }
+
+
 }

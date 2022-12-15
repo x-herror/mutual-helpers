@@ -174,7 +174,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Commits"
+                    android:text="Comments"
                     android:textSize="20dp"/>
                 <Button
                     android:id="@+id/activity_item_commit_button"
