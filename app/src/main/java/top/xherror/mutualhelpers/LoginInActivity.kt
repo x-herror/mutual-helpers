@@ -29,12 +29,7 @@ class LoginInActivity : BaseActivity() {
         binding.activityLoginInButtonLoginIn.setOnClickListener {
             val inputAccount=binding.activityLoginInAccountEdit.text.toString()
             var arraylist=persondb.getListString(inputAccount)
-            /*
-            * arraylist[0]:password
-            * arraylist[1]:type  U A
-            * arraylist[2]:name
-            * arraylist[3]:phone
-            * */
+
             if (arraylist!!.isEmpty()){
                 //user or admin unregister
                 Toast.makeText(this,"Please register or check your account", Toast.LENGTH_SHORT).show()

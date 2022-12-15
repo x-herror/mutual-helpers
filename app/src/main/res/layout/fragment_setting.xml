@@ -3,16 +3,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SettingFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/fragment_setting_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/ic_upload_image"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/fragment_setting_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/fragment_setting_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Name:"/>
+            <TextView
+                android:id="@+id/fragment_setting_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/fragment_setting_name_label"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/fragment_setting_phone_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/fragment_setting_avatar"
+                app:layout_constraintTop_toBottomOf="@id/fragment_setting_name_label"
+                android:text="Phone:"/>
+            <TextView
+                android:id="@+id/fragment_setting_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/fragment_setting_avatar"
+                app:layout_constraintTop_toTopOf="@id/fragment_setting_name_label"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <Button
             android:id="@+id/fragmentSettingLoginOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:backgroundTint="@color/blue"
             android:text="Login out"/>
         <Button

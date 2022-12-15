@@ -38,6 +38,9 @@ class MyApplication : Application() {
         array.add(ADMINTYPE)
         array.add("xherror")
         array.add("18759628434")
+        array.add("")
+        array.add("-1")
+        array.add("-1")
         if (persondb.getListString("admin00")!!.isEmpty())  persondb?.putListString("admin00",array)
     }
 
