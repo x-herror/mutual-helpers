@@ -23,11 +23,28 @@ class Category(var name:String="",var attributes:ArrayList<String>) {
     fun getSearchResult(searchString:String):ArrayList<EntityItem>{
         //TODO:模糊搜索,ES,轻量NN
         val array=ArrayList<EntityItem>()
-        for (index :Int in itemList.lastIndex downTo 0) {
-            if (searchString in itemList[index].attributes||searchString in itemList[index].name||searchString in itemList[index].description) array.add(itemList[index])
+        val useArray = MutableList<Boolean>(itemList.size) { false }
+        for (i :Int in searchString.length downTo 1){
+            for (j :Int in 0 until  (searchString.length-i+1)){
+                val subSearchString=searchString.substring(j,j+i)
+                for (index :Int in itemList.lastIndex downTo 0) {
+                    if ((subSearchString in itemList[index].attributes||subSearchString in itemList[index].name||subSearchString in itemList[index].description) && !useArray[index]){
+                        array.add(itemList[index])
+                        useArray[index]=true
+                    }
+                }
+
+            }
         }
+
         return  array
     }
+
+    fun getSearch(){
+
+    }
+
+
 
     fun notifyItemAdd(addEntityItem:EntityItem){
         itemList.add(addEntityItem)

@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -78,9 +75,9 @@ class FirstFragment : Fragment() {
 
                 return false
             }
-        }
-        )
-
+        })
+        //https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android
+        fragmentFirstSearchView.setOnClickListener(View.OnClickListener { fragmentFirstSearchView.isIconified = false })
         return  view
     }
 
