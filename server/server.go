@@ -3,28 +3,64 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"os"
 	"path"
+	"server/badger"
 	"server/models"
 	"strconv"
+	"time"
 )
 
+const FORMAT = "2006.01.02-15:04:05"
+
+var timeStamp int64 = 0
+
 func main() {
+
 	router := gin.Default()
 	//router.GET("/images/:imageName", getImage)
-
+	router.GET("/update", handleUpdate)
 	router.GET("/items/:category", getItem)
 	router.GET("/items", getItems)
+
 	router.Static("/images", "./images")
+	router.Static("/avatars", "./avatars")
 
 	router.POST("/items", addItem)
 	router.POST("/images", addImage)
+	router.POST("/avatars", addAvatar)
 
 	router.DELETE("/items", deleteItem)
 
+	/*
+		router.GET("/categories",getCategories)
+		router.POST("/categories",addCategory)
+		router.DELETE("/categories",deleteCategory)
+
+		router.GET("/persons",getPersons)
+		router.POST("/persons",addPerson)
+
+
+		router.GET("/waitpersons",getWaitPersons)
+		router.POST("/waitpersons",addWaitPerson)
+		router.DELETE("/waitpersons",deleteWaitPerson)
+
+	*/
+
 	router.Run()
-	defer models.Db.Close()
+	models.Close()
+}
+
+func handleUpdate(c *gin.Context) {
+	t, _ := strconv.Atoi(c.Query("timeStamp"))
+	t64 := int64(t)
+	if timeStamp > t64 {
+		//TODO
+	} else {
+		c.JSON(http.StatusOK, gin.H{"update": "not"})
+	}
 }
 
 func getItems(c *gin.Context) {
@@ -56,7 +92,7 @@ func addItem(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 	} else {
 		models.AddItem(prod)
-		c.IndentedJSON(http.StatusCreated, prod)
+		setTimeStamp(prod.Time)
 	}
 }
 
@@ -69,6 +105,21 @@ func addImage(c *gin.Context) {
 	//https://blog.csdn.net/lvjie13450/article/details/123164878
 	for _, file := range files {
 		dest := path.Join("./images/", file.Filename)
+		err := c.SaveUploadedFile(file, dest)
+		if err != nil {
+			fmt.Println("Err", err.Error())
+		}
+	}
+}
+
+func addAvatar(c *gin.Context) {
+	form, err := c.MultipartForm()
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+	}
+	files := form.File["avatar"]
+	for _, file := range files {
+		dest := path.Join("./avatars/", file.Filename)
 		err := c.SaveUploadedFile(file, dest)
 		if err != nil {
 			fmt.Println("Err", err.Error())
@@ -104,5 +155,17 @@ func deleteItem(c *gin.Context) {
 	if err != nil {
 		fmt.Println("Err", err.Error())
 	}
-	//item.ImagePath
+	setTimeStamp(time.Now().Format(FORMAT))
+	//TODO:item.ImagePath
+}
+
+func addCategory(c *gin.Context) {
+	badger.Add()
+}
+
+func setTimeStamp(t string) {
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	tt, _ := time.ParseInLocation(FORMAT, t, loc)
+	timeStamp = tt.Unix()
+	log.Println("update time:", timeStamp)
 }

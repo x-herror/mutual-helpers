@@ -6,7 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var Db *sql.DB
+var db *sql.DB
 
 type Item struct {
 	Id           int    `json:"id"`
@@ -49,14 +49,14 @@ func init() {
 	dbpass := "200430"
 	dbname := "mutualhelpers"
 	var err error
-	Db, err = sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
+	db, err = sql.Open("mysql", dbuser+":"+dbpass+"@tcp(127.0.0.1:3306)/"+dbname)
 	if err != nil {
 		fmt.Println("Err", err.Error())
 	}
 }
 
 func GetItems() []Item {
-	results, err := Db.Query("SELECT * FROM items")
+	results, err := db.Query("SELECT * FROM items")
 	if err != nil {
 		fmt.Println("Err", err.Error())
 		return nil
@@ -81,7 +81,7 @@ func GetItems() []Item {
 func GetItem(category string) *Item {
 	prod := &Item{}
 
-	results, err := Db.Query("SELECT * FROM items where category=?", category)
+	results, err := db.Query("SELECT * FROM items where category=?", category)
 
 	if err != nil {
 		fmt.Println("Err", err.Error())
@@ -102,7 +102,7 @@ func GetItem(category string) *Item {
 }
 
 func AddItem(item Item) {
-	insert, err := Db.Query(
+	insert, err := db.Query(
 		"INSERT INTO items (name,category,location,time,imagePath,imageWidth,imageHeight,phone,ownerAccount,attributes,description) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
 		item.Name, item.Category, item.Location, item.Time, item.ImagePath, item.ImageWidth, item.ImageHeight, item.Phone, item.OwnerAccount, item.Attributes, item.Description)
 
@@ -117,18 +117,25 @@ func AddItem(item Item) {
 
 func DeleteItem(id int) (*Item, error) {
 	prod := &Item{}
-	results, err := Db.Query("SELECT * FROM items where id=?", id)
+	results, err := db.Query("SELECT * FROM items where id=?", id)
 
 	err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImagePath, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description)
 	if err != nil {
 		return prod, err
 	}
 
-	_, err = Db.Query("DELETE FROM items where id=?", id)
+	_, err = db.Query("DELETE FROM items where id=?", id)
 	if err != nil {
 		fmt.Println("Err", err.Error())
 		return prod, err
 	}
 
 	return prod, nil
+}
+
+func Close() {
+	err := db.Close()
+	if err != nil {
+		fmt.Println("Err", err.Error())
+	}
 }
