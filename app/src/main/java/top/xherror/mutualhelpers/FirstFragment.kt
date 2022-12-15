@@ -77,7 +77,7 @@ class FirstFragment : Fragment() {
             }
         })
         //https://stackoverflow.com/questions/17670685/custom-searchview-whole-clickable-in-android
-        fragmentFirstSearchView.setOnClickListener(View.OnClickListener { fragmentFirstSearchView.isIconified = false })
+        fragmentFirstSearchView.setIconifiedByDefault(false)
         return  view
     }
 
