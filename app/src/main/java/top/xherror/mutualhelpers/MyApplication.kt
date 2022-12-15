@@ -29,8 +29,6 @@ class MyApplication : Application() {
         settingdb= TinyDB(applicationContext,"settingList")
         waitdb=TinyDB(applicationContext  ,"waitList")
         persondb=TinyDB(applicationContext,"personList")
-        DateBase.init(DATABASE_NAME,1)
-
     }
 
     private fun adminInit(){

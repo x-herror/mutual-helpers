@@ -37,23 +37,17 @@ class AddCategoryActivity : AppCompatActivity() {
         binding.actvityAddCategoryFab.setOnClickListener {
             // Use the Builder class for convenient dialog construction
             val builder = AlertDialog.Builder(this)
-
             // Get the layout inflater
             val inflater: LayoutInflater = this.layoutInflater
-
             // Inflate the custom layout
             val view = inflater.inflate(R.layout.dialog_add_category, null)
-
             // Set the custom layout as the view for the dialog
             builder.setView(view)
-
             // Set the title of the dialog
             builder.setTitle("Enter Name and Attributes")
             // Get the input from the EditTexts
-
             val nameInput = view.findViewById<EditText>(R.id.dialog_add_category_name_input)
             val attributesInput = view.findViewById<EditText>(R.id.dialog_add_category_attributes_input)
-
             // Set the positive button to commit the input
             builder.setPositiveButton("Commit") { _, _ ->
                 val name = nameInput.text.toString()
@@ -70,7 +64,6 @@ class AddCategoryActivity : AppCompatActivity() {
             builder.setNegativeButton("Cancel") { _, _ ->
                 // Send the cancel event back to the activity
             }
-
             builder.create().show()
         }
     }

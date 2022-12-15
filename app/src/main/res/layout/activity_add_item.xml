@@ -80,28 +80,12 @@
             app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewLocation"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <TextView
-            android:id="@+id/activityAddItemTextViewPhone"
-            android:text="手机(必填)"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <EditText
-            android:id="@+id/activityAddItemEditTextPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewPhone"
-            app:layout_constraintLeft_toLeftOf="parent"/>
 
         <Spinner
             android:id="@+id/activityAddItemSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextPhone"
+            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <LinearLayout

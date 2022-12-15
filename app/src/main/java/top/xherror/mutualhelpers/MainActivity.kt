@@ -36,6 +36,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
+        DateBase.init(DATABASE_NAME,1)
         /*
         val date= Date(System.currentTimeMillis())
         val simpleDateFormat= SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")

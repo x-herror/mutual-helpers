@@ -1,136 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ItemActivity">
-
-        <ImageView
-            android:id="@+id/activityItemImage"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@mipmap/ic_upload_image" />
-
-        <TextView
-            android:id="@+id/activityItemTextViewName"
-            android:text="Name"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/iv_help_image_first"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemEditTextName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewName"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemTextViewLocation"
-            android:text="Location"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextName"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemEditTextLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewLocation"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemTextViewTime"
-            android:text="Time"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemEditTextTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewPhone"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-
-        <TextView
-            android:id="@+id/activityItemTextViewPhone"
-            android:text="Phone"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextLocation"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemEditTextPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewPhone"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemTextViewCategory"
-            android:text="Category"
-            android:textSize="20dp"
-            android:textColor="@color/Red"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/activityItemEditTextCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/activityItemAttributes"
-            android:text="Attributes"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
+        android:orientation="vertical">
         <LinearLayout
-            android:id="@+id/activityItemAttributesLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ItemActivity">
+
+            <ImageView
+                android:id="@+id/activityItemImage"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@mipmap/ic_upload_image" />
+
+            <TextView
+                android:id="@+id/activityItemTextViewName"
+                android:text="Name"
+                android:textSize="20dp"
+                android:textColor="@color/Red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/activityItemEditTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/activityItemTextViewLocation"
+                android:text="Location"
+                android:textSize="20dp"
+                android:textColor="@color/Red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/activityItemEditTextLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/activityItemTextViewTime"
+                android:text="Time"
+                android:textSize="20dp"
+                android:textColor="@color/Red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               />
+
+            <TextView
+                android:id="@+id/activityItemEditTextTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/activityItemTextViewTime"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+            <TextView
+                android:id="@+id/activityItemTextViewCategory"
+                android:text="Category"
+                android:textSize="20dp"
+                android:textColor="@color/Red"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/activityItemEditTextCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/activityItemAttributes"
+                android:text="Attributes"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/activityItemAttributesLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/activityItemTextViewDescription"
+                android:text="Description"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/activityItemEditTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="这个人很懒,甚至不想填QWQ"
+                 />
+
+
+        </LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:src="@drawable/delimiter" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/activity_item_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/ic_upload_image"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/activity_item_person_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                app:layout_constraintLeft_toRightOf="@id/activity_item_avatar"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/activity_item_person_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/activity_item_person_name_label"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/activity_item_person_phone_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone:"
+                app:layout_constraintLeft_toRightOf="@id/activity_item_avatar"
+                app:layout_constraintTop_toBottomOf="@id/activity_item_person_name_label"/>
+            <TextView
+                android:id="@+id/activity_item_person_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/activity_item_person_phone_label"
+                app:layout_constraintTop_toBottomOf="@id/activity_item_person_name"/>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:src="@drawable/delimiter" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <TextView
-            android:id="@+id/activityItemTextViewDescription"
-            android:text="Description"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextPhone"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
-        <TextView
-            android:id="@+id/activityItemEditTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="这个人很懒,甚至不想填QWQ"
-            app:layout_constraintTop_toBottomOf="@id/activityAddItemTextViewDescription"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Commits"
+                    android:textSize="20dp"/>
+                <Button
+                    android:id="@+id/activity_item_commit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/pink"
+                    android:layout_marginLeft="180dp"
+                    android:text="Add"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/activity_item_commit_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+        </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+
+
+</androidx.core.widget.NestedScrollView>

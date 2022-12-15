@@ -2,20 +2,22 @@ package top.xherror.mutualhelpers
 
 import android.util.Log
 import androidx.room.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
 const val DATABASE_NAME="items.db"
 object DateBase {
     val tag="DateBase"
     lateinit var categorydb:TinyDB
-    val categoryList=ArrayList<Category>()
+    lateinit var categoryList:ArrayList<Category>
     lateinit var myItemList:ArrayList<EntityItem>
     lateinit var db:AppDatabase
     lateinit var itemDao:ItemDao
     lateinit var remoteHelper:RemoteHelper
 
     fun init(name:String, version:Int){
-
+        categoryList=ArrayList<Category>()
         db = Room.databaseBuilder(
             MyApplication.getContext(),
             AppDatabase::class.java, DATABASE_NAME
@@ -45,6 +47,9 @@ object DateBase {
         itemDao.insertItems(item)
         remoteHelper.addItem(item)
         file?.let { remoteHelper.addImage(file) }
+    }
+    fun updateItem(item: EntityItem){
+        itemDao.updateItems(item)
     }
 
     //TODO:delete image
@@ -112,6 +117,7 @@ data class EntityItem (
     @ColumnInfo(name = "ownerAccount") var ownerAccount:String,
     @ColumnInfo(name = "attributes") var attributes:String,
     @ColumnInfo(name = "description") var description:String,
+    @ColumnInfo(name = "comments") var comments:String
 )
 
 @androidx.room.Entity

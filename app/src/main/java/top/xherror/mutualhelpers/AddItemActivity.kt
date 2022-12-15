@@ -30,6 +30,8 @@ import java.io.*
 import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 private const val RESULT_LOAD_IMAGE = 1
@@ -127,7 +129,6 @@ class AddItemActivity : BaseActivity() {
             cancelButton.setOnClickListener {
                 selectDialog.dismiss()
             }
-
             selectDialog.show()
         }
 
@@ -162,7 +163,6 @@ class AddItemActivity : BaseActivity() {
             }
         }
 
-
         //提交事件
         binding.activityAddItemButtonGo.setOnClickListener {
             val gson=Gson()
@@ -172,22 +172,24 @@ class AddItemActivity : BaseActivity() {
             val json=gson.toJson(map)
             val name=binding.activityAddItemEditTextName.text.toString()
             val location=binding.activityAddItemEditTextLocation.text.toString()
-            val phone=binding.activityAddItemEditTextPhone.text.toString()
+            //val phone=binding.activityAddItemEditTextPhone.text.toString()
 
 
-            if (name!="" && location!="" && phone!=""){
-                Log.d(tag,"name:$name location:$location phone:$phone" )
+            if (name!="" && location!="" ){
+                Log.d(tag,"name:$name location:$location " )
                 val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
                 val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
                 val date=Date(System.currentTimeMillis())
                 val ownerAccount= person.account
-                val ownerName= person.name
+                val phone = person.phone
                 var imagePath=""
                 var imageName=""
                 var file:File?=null
                 val description=binding.activityAddItemEditTextDescription.text.toString()
                 val time=simpleDateFormat.format(date)
                 val options = BitmapFactory.Options()
+                val comments=HashMap<String,ArrayList<String>>()
+                val commentsJson=gson.toJson(comments)
                 options.inJustDecodeBounds = true
                 when (chooseOption){
                     CHOOSE_GALLERY->{
@@ -221,7 +223,8 @@ class AddItemActivity : BaseActivity() {
                     phone= phone,
                     ownerAccount= ownerAccount,
                     attributes= json,
-                    description = description )
+                    description = description,
+                    comments = commentsJson )
 
                 DateBase.insertItem(entityItem,file)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
