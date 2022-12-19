@@ -21,9 +21,7 @@ class LoginInActivity : BaseActivity() {
         binding.activityLoginInAccountEdit.setText(rememberdb.getString("rememberAccount"))
         if (isRemember){
             if (person.type== ADMINTYPE) person= Admin(person.account, person.toList())
-            Log.d(tag,"account:${person.account.toString()},type:${person.type.toString()} login in")
-            startActivity(Intent(this, MainActivity::class.java))
-            this.finish()
+            person.loginIn(this)
             //binding.activityLoginInPasswordEdit.setText(sp.getString("rememberPassword",""))
         }
         binding.activityLoginInButtonLoginIn.setOnClickListener {
@@ -31,15 +29,12 @@ class LoginInActivity : BaseActivity() {
             var arraylist=persondb.getListString(inputAccount)
 
             if (arraylist!!.isEmpty()){
-                //user or admin unregister
                 Toast.makeText(this,"Please register or check your account", Toast.LENGTH_SHORT).show()
             } else{
-                person= Person(inputAccount,arraylist)
+                person= User(inputAccount,arraylist)
                 val inputSecret=
                     MyApplication.createSignature(binding.activityLoginInPasswordEdit.text.toString(), KEY)
-                //success login in
                 if (person.password==inputSecret) {
-
                     if (binding.activityLoginInAdminCheckBox.isChecked){
                         if (person.type== USERTYPE){
                             Toast.makeText(this, "you don't have the privilege", Toast.LENGTH_SHORT).show()
@@ -52,18 +47,14 @@ class LoginInActivity : BaseActivity() {
                         isRemember = true
                         rememberdb.putBoolean("remember",true)
                         rememberdb.putListString(inputAccount,arraylist)
-                    }else{
+                    }else {
                         isRemember = false
                         rememberdb.remove("remember")
                         rememberdb.remove(inputAccount)
                     }
-
                     rememberdb.putString("rememberAccount",inputAccount)
-                    Log.d(tag,"account:${person.account.toString()},type:${person.type.toString()} login in")
-                    startActivity(Intent(this, MainActivity::class.java))
-                    this.finish()
+                    person.loginIn(this)
                 }
-                //login in fail
                 else{
                     Toast.makeText(this,"Password miss",Toast.LENGTH_SHORT).show()
                 }
@@ -71,7 +62,7 @@ class LoginInActivity : BaseActivity() {
 
         }
         binding.activityLoginInButtonRegister.setOnClickListener {
-            startActivity(Intent(this,RegisterActivity::class.java))
+            person.register(this)
         }
     }
 
