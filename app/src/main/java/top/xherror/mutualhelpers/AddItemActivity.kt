@@ -121,7 +121,8 @@ class AddItemActivity : BaseActivity() {
             galleryButton.setOnClickListener {
                 selectDialog.dismiss()
                 val gallery = Intent(Intent.ACTION_PICK)
-                gallery.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+                //gallery.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+                gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 toGalleryActivity.launch(gallery)
             }
 
