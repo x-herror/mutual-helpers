@@ -1,10 +1,14 @@
-## SE homework1
+
+## 概述
+CS3331-1-软件工程大作业，参考《第一行代码 第三版》
+
 [主文件](https://github.com/gxherror/MutualHelpers/blob/main/app/src/main/java/top/xherror/mutualhelpers/MainActivity.kt)
+
 [APP](https://github.com/gxherror/MutualHelpers/blob/main/app/release/app-release.apk)
-[说明](https://xherror.top/post/se/mutual-helpers/)
 
-《第一行代码 第三版》，
+[说明文档](https://xherror.top/post/se/mutual-helpers/)
 
+## 整体设计
 - 安卓部分
   - 整体框架使用Activity套Fragment，后续考虑换成更流行的Viewpager2加Fragment
   - UI采用NestedScrollView嵌套RecycleView实现滑动与列表实现
@@ -20,15 +24,13 @@
   - 使用Glide实现远端图片的获取，图片的异步加载与本地缓存
 
 
-- 特点
+## 特点
   - UI设计较为简单，更多重点在后端逻辑部分
   - 实现了留言功能，方便双方的交流
   - 动态类别修改，分类搜索，简单的模糊搜索(水壶->水杯)
   - 密码采用SHA256加密储存，实现记住密码自动登入功能
 
-
-
-
+## General Design
 - Android
  - total framework design use Activity together with Fragment, would change to Viewpager2 together with Fragment in future 
  - UI design uses NestedScrollView nests RecycleView to implement screen scroll and list show
@@ -43,7 +45,8 @@
  - use Gin framework to implement RESTFUL API,work as frontend server
  - use Glide to get remote images,asynchronous load and local cache
 
-- Features 
+
+## Features
   - UI design is relative simple，attach more importance on backend logic design 
   - implement comment utility，make communication easier 
   - dynamic category edit,classified saerch,simple huzzy search
