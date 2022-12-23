@@ -7,8 +7,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +65,7 @@ interface DatabaseService{
     Call<ResponseBody> addAvatar(@Part MultipartBody.Part image);
 
     @GET("update")
-    Call<ResponseBody> updateCheck(@Query("timeStamp") Integer timeStamp);
+    Call<ResponseBody> updateCheck(@Query("timeStamp") Long timeStamp);
 
 }
 
@@ -158,6 +163,34 @@ public class RemoteHelper {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i("MainActivity","POST请求成功");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void updateCheck(Long timeStamp){
+        Gson gson= new Gson();
+        Call<ResponseBody> item= service.updateCheck(timeStamp);
+        item.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                //Log.i("MainActivity","POST请求成功");
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    String update=jsonObject.getString("update");
+                    Log.d("RemoteHelper",update);
+                    if (update.equals("yes")){
+                        //TODO:
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

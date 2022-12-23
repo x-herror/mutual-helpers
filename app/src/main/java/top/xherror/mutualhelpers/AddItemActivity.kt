@@ -179,8 +179,8 @@ class AddItemActivity : BaseActivity() {
             if (name!="" && location!="" ){
                 Log.d(tag,"name:$name location:$location " )
                 val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
-                val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
-                val date=Date(System.currentTimeMillis())
+                val timeStamp=System.currentTimeMillis()
+                val date=Date(timeStamp)
                 val ownerAccount= person.account
                 val phone = person.phone
                 var imagePath=""
@@ -225,8 +225,8 @@ class AddItemActivity : BaseActivity() {
                     attributes= json,
                     description = description,
                     comments = commentsJson )
-
-                DateBase.insertItem(entityItem,file)
+                //TODO:millis
+                DateBase.insertItem(entityItem,file,timeStamp/1000)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
                 MainActivity.addEntityItem=entityItem
                 val intent=Intent()

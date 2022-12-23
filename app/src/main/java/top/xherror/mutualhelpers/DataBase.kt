@@ -23,6 +23,7 @@ object DateBase {
             AppDatabase::class.java, DATABASE_NAME
         ).allowMainThreadQueries().build()
         remoteHelper=RemoteHelper()
+        updateCheck()
         itemDao = db.itemDao()
 
         myItemList= ArrayList(itemDao.getMyItems(person.account))
@@ -43,10 +44,15 @@ object DateBase {
         Log.d(tag,categoryList.toString())
     }
 
-    fun insertItem( item: EntityItem,file:File?){
+    fun insertItem( item: EntityItem,file:File?,timeStamp: Long){
         itemDao.insertItems(item)
         remoteHelper.addItem(item)
+        setTimeStamp(timeStamp)
         file?.let { remoteHelper.addImage(file) }
+    }
+
+    fun updateCheck(){
+        remoteHelper.updateCheck(settingdb.getLong("timeStamp"))
     }
 
     fun updatePerson(person: Person,file:File?){
@@ -71,6 +77,8 @@ object DateBase {
             //}
         }
         itemDao.deleteItems(*items)
+        //remoteHelper.deleteItem()
+        //setTimeStamp(timeStamp)
     }
 
     fun getAll()=ArrayList<EntityItem>(itemDao.getAll())
@@ -102,6 +110,10 @@ object DateBase {
 
     fun notifyMyItemDelete(deleteEntityItem: EntityItem){
         myItemList.remove(deleteEntityItem)
+    }
+
+    fun setTimeStamp(time:Long){
+        settingdb.putLong("timeStamp",time)
     }
 
 }
