@@ -213,7 +213,9 @@ class AddItemActivity : BaseActivity() {
                     }
                 }
 
-                val entityItem=EntityItem(name = name,
+                val entityItem=EntityItem(
+                    id = -1,
+                    name = name,
                     category = categoryName,
                     location= location,
                     time= time,
@@ -226,9 +228,9 @@ class AddItemActivity : BaseActivity() {
                     description = description,
                     comments = commentsJson )
                 //TODO:millis
-                DateBase.insertItem(entityItem,file,timeStamp/1000)
+                DateBase.addItem(entityItem,file,timeStamp/1000)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
-                MainActivity.addEntityItem=entityItem
+                //MainActivity.addEntityItem=entityItem
                 val intent=Intent()
                 /*
                 intent.run {
@@ -241,9 +243,6 @@ class AddItemActivity : BaseActivity() {
                 }
 
                  */
-                val category=DateBase.getCategory(categoryName)
-                category?.notifyItemAdd(entityItem)
-                DateBase.notifyMyItemAdd(entityItem)
                 setResult(RESULT_OK,intent)
                 finish()
             }else{

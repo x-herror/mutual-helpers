@@ -68,7 +68,7 @@ interface DatabaseService{
     @GET("update")
     Call<ResponseBody> updateCheck(@Query("timeStamp") Long timeStamp);
 
-    @DELETE("delete")
+    @DELETE("items")
     Call<ResponseBody> deleteItem(@Query("id") Integer id);
 
 }
@@ -101,7 +101,11 @@ public class RemoteHelper {
         item.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.i(tag,"success:delete item id="+String.valueOf(entityitem.getId()));
+                if(response.isSuccessful()){
+                    Log.i(tag,"success:delete item id="+String.valueOf(entityitem.getId()));
+                }else {
+                    Log.i(tag,"fail:delete item id="+String.valueOf(entityitem.getId()));
+                }
             }
 
             @Override
@@ -119,6 +123,9 @@ public class RemoteHelper {
                 EntityItem callbackEntityItem=response.body();
                 Log.d(tag,"success:add item id="+String.valueOf(callbackEntityItem.getId()));
                 DateBase.itemDao.insertItems(callbackEntityItem);
+                Category category= DateBase.INSTANCE.getCategory(callbackEntityItem.getCategory());
+                category.notifyItemAdd(callbackEntityItem);
+                DateBase.INSTANCE.notifyMyItemAdd(callbackEntityItem);
             }
 
             @Override

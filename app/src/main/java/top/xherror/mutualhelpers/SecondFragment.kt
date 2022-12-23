@@ -45,9 +45,9 @@ class SecondFragment : Fragment() {
 
 
     fun removeItem(item:EntityItem,position:Int){
-        DateBase.myItemList.remove(item)
+
         adapter.notifyItemRemoved(position)
-        DateBase.deleteItems(item)
+        DateBase.deleteItem(item)
     }
 
     @SuppressLint("Range")
@@ -136,8 +136,7 @@ class SecondFragment : Fragment() {
                     setPositiveButton("COMMIT"){
                             dialog,which->
                         removeItem(item,position)
-                        val category=DateBase.getCategory(item.category)
-                        category?.notifyItemDelete(item)
+
                     }
                     setNegativeButton("CANCEL"){
                             dialog,which->

@@ -44,10 +44,17 @@ object DateBase {
         Log.d(tag,categoryList.toString())
     }
 
-    fun insertItem( item: EntityItem,file:File?,timeStamp: Long){
+    fun addItem( item: EntityItem,file:File?,timeStamp: Long){
+        //TODO:modify remoteHelper func call
         setTimeStamp(timeStamp)
         remoteHelper.addItem(item)
         file?.let { remoteHelper.addImage(file) }
+        /*
+        val category=getCategory(item.category)
+        category?.notifyItemAdd(item)
+        notifyMyItemAdd(item)
+
+         */
     }
 
     fun updateCheck(){
@@ -68,11 +75,12 @@ object DateBase {
     }
 
     //TODO:delete image
-    fun deleteItems(vararg items: EntityItem){
-        itemDao.deleteItems(*items)
-        items.onEach {
-            remoteHelper.deleteItem(it)
-        }
+    fun deleteItem(item: EntityItem){
+        itemDao.deleteItems(item)
+        remoteHelper.deleteItem(item)
+        myItemList.remove(item)
+        val category=getCategory(item.category)
+        category?.notifyItemDelete(item)
         val timeStamp=System.currentTimeMillis()/1000
         setTimeStamp(timeStamp)
     }
@@ -123,7 +131,7 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey var id: Int=-1,
+    @PrimaryKey var id: Int,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,
