@@ -45,9 +45,8 @@ object DateBase {
     }
 
     fun insertItem( item: EntityItem,file:File?,timeStamp: Long){
-        itemDao.insertItems(item)
-        remoteHelper.addItem(item)
         setTimeStamp(timeStamp)
+        remoteHelper.addItem(item)
         file?.let { remoteHelper.addImage(file) }
     }
 
@@ -70,15 +69,12 @@ object DateBase {
 
     //TODO:delete image
     fun deleteItems(vararg items: EntityItem){
-        items.onEach {
-            //val file=File(it.imagePath)
-            //if (file.exists()){
-            //    file.delete()
-            //}
-        }
         itemDao.deleteItems(*items)
-        //remoteHelper.deleteItem()
-        //setTimeStamp(timeStamp)
+        items.onEach {
+            remoteHelper.deleteItem(it)
+        }
+        val timeStamp=System.currentTimeMillis()/1000
+        setTimeStamp(timeStamp)
     }
 
     fun getAll()=ArrayList<EntityItem>(itemDao.getAll())
@@ -127,7 +123,7 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey(autoGenerate = true)var id: Int=0,
+    @PrimaryKey var id: Int=-1,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,

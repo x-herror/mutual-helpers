@@ -30,6 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -67,9 +68,13 @@ interface DatabaseService{
     @GET("update")
     Call<ResponseBody> updateCheck(@Query("timeStamp") Long timeStamp);
 
+    @DELETE("delete")
+    Call<ResponseBody> deleteItem(@Query("id") Integer id);
+
 }
 
 public class RemoteHelper {
+    private static final String  tag= "RemoteHelper";
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://192.168.0.184:8080/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -81,11 +86,26 @@ public class RemoteHelper {
         items.enqueue(new Callback<List<EntityItem>>() {
             @Override
             public void onResponse(Call<List<EntityItem>> call, Response<List<EntityItem>> response) {
-                Log.i("MainActivity","GET请求成功");
+                Log.i(tag,"GET请求成功");
             }
 
             @Override
             public void onFailure(Call<List<EntityItem>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteItem(EntityItem entityitem){
+        Call<ResponseBody> item= service.deleteItem(entityitem.getId());
+        item.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.i(tag,"success:delete item id="+String.valueOf(entityitem.getId()));
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -96,26 +116,13 @@ public class RemoteHelper {
         item.enqueue(new Callback<EntityItem>() {
             @Override
             public void onResponse(Call<EntityItem> call, Response<EntityItem> response) {
-                Log.i("MainActivity","POST请求成功");
+                EntityItem callbackEntityItem=response.body();
+                Log.d(tag,"success:add item id="+String.valueOf(callbackEntityItem.getId()));
+                DateBase.itemDao.insertItems(callbackEntityItem);
             }
 
             @Override
             public void onFailure(Call<EntityItem> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
-
-    public void addTestItem(TestItem testItem){
-        Call<TestItem> item= service.addTestItem(testItem);
-        item.enqueue(new Callback<TestItem>() {
-            @Override
-            public void onResponse(Call<TestItem> call, Response<TestItem> response) {
-                Log.i("MainActivity","POST请求成功");
-            }
-
-            @Override
-            public void onFailure(Call<TestItem> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -182,7 +189,7 @@ public class RemoteHelper {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     String update=jsonObject.getString("update");
-                    Log.d("RemoteHelper",update);
+                    Log.d(tag,update);
                     if (update.equals("yes")){
                         //TODO:
                     }
