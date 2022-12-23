@@ -146,6 +146,7 @@ class AddItemActivity : BaseActivity() {
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 binding.activityAddItemSpinnerLinearLayout.removeAllViews()
+                editTextList.clear()
                 categoryName=categoryList[pos]
                 DateBase.getCategory(categoryName)?.attributes?.let { attributes = it }
                 attributes.onEach {

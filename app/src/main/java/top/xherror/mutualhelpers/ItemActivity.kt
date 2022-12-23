@@ -37,6 +37,9 @@ class ItemActivity : BaseActivity() {
         binding.activityItemEditTextLocation.text=showEntityItem.location
         binding.activityItemEditTextTime.text=showEntityItem.time
         binding.activityItemEditTextCategory.text= showEntityItem.category
+        if (showEntityItem.description.isNotBlank()){
+            binding.activityItemEditTextDescription.text= showEntityItem.description
+        }
         val commentList=ArrayList<Comment>()
         val gson=Gson()
         val attrMapType= object:TypeToken<HashMap<String, String>>(){ }.type
