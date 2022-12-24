@@ -25,7 +25,7 @@ class MyApplication : Application() {
 
     private fun dbInit(){
         rememberdb=TinyDB(applicationContext,"rememberList")
-        person= Person(rememberdb.getString("rememberAccount"),rememberdb.getListString(rememberdb.getString("rememberAccount")))
+        person= User(rememberdb.getString("rememberAccount"),rememberdb.getListString(rememberdb.getString("rememberAccount")))
         settingdb= TinyDB(applicationContext,"settingList")
         waitdb=TinyDB(applicationContext  ,"waitList")
         persondb=TinyDB(applicationContext,"personList")

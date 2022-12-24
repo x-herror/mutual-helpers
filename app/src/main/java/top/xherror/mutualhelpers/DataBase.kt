@@ -23,6 +23,7 @@ object DateBase {
             AppDatabase::class.java, DATABASE_NAME
         ).allowMainThreadQueries().build()
         remoteHelper=RemoteHelper()
+        updateCheck()
         itemDao = db.itemDao()
 
         myItemList= ArrayList(itemDao.getMyItems(person.account))
@@ -43,10 +44,21 @@ object DateBase {
         Log.d(tag,categoryList.toString())
     }
 
-    fun insertItem( item: EntityItem,file:File?){
-        itemDao.insertItems(item)
+    fun addItem( item: EntityItem,file:File?,timeStamp: Long){
+        //TODO:modify remoteHelper func call
+        setTimeStamp(timeStamp)
         remoteHelper.addItem(item)
         file?.let { remoteHelper.addImage(file) }
+        /*
+        val category=getCategory(item.category)
+        category?.notifyItemAdd(item)
+        notifyMyItemAdd(item)
+
+         */
+    }
+
+    fun updateCheck(){
+        remoteHelper.updateCheck(settingdb.getLong("timeStamp"))
     }
 
     fun updatePerson(person: Person,file:File?){
@@ -63,14 +75,14 @@ object DateBase {
     }
 
     //TODO:delete image
-    fun deleteItems(vararg items: EntityItem){
-        items.onEach {
-            //val file=File(it.imagePath)
-            //if (file.exists()){
-            //    file.delete()
-            //}
-        }
-        itemDao.deleteItems(*items)
+    fun deleteItem(item: EntityItem){
+        itemDao.deleteItems(item)
+        remoteHelper.deleteItem(item)
+        myItemList.remove(item)
+        val category=getCategory(item.category)
+        category?.notifyItemDelete(item)
+        val timeStamp=System.currentTimeMillis()/1000
+        setTimeStamp(timeStamp)
     }
 
     fun getAll()=ArrayList<EntityItem>(itemDao.getAll())
@@ -104,6 +116,10 @@ object DateBase {
         myItemList.remove(deleteEntityItem)
     }
 
+    fun setTimeStamp(time:Long){
+        settingdb.putLong("timeStamp",time)
+    }
+
 }
 
 @androidx.room.Database(entities = [EntityItem::class], version = 1,exportSchema = false)
@@ -115,7 +131,7 @@ const val CHOOSE_GALLERY=0
 const val CHOOSE_CAMERA=1
 @androidx.room.Entity
 data class EntityItem (
-    @PrimaryKey(autoGenerate = true)var id: Int=0,
+    @PrimaryKey var id: Int,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "category") var category: String,
     @ColumnInfo(name = "location") var location:String,

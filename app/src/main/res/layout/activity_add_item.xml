@@ -19,7 +19,7 @@
             android:focusableInTouchMode="true"
             android:gravity="start|center_vertical"
             android:paddingStart="10dp"
-            android:text="选择图片"
+            android:text="Select picture"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
 
         <TextView
             android:id="@+id/activityAddItemTextViewName"
-            android:text="名字(必填)"
+            android:text="Name"
             android:textSize="20dp"
             android:textColor="@color/Red"
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
 
         <TextView
             android:id="@+id/activityAddItemTextViewLocation"
-            android:text="地点(必填)"
+            android:text="Location"
             android:textSize="20dp"
             android:textColor="@color/Red"
             android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
 
         <TextView
             android:id="@+id/activityAddItemTextViewDescription"
-            android:text="描述"
+            android:text="Description"
             android:textSize="20dp"
             android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
@@ -117,7 +117,7 @@
             android:id="@+id/activityAddItemButtonGo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="提交"
+            android:text="Commit"
             android:backgroundTint="@color/blue"
             app:layout_constraintTop_toBottomOf="@id/activityAddItemEditTextDescription"
             app:layout_constraintLeft_toLeftOf="parent"/>

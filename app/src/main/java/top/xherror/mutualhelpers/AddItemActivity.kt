@@ -121,7 +121,8 @@ class AddItemActivity : BaseActivity() {
             galleryButton.setOnClickListener {
                 selectDialog.dismiss()
                 val gallery = Intent(Intent.ACTION_PICK)
-                gallery.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+                //gallery.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
+                gallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
                 toGalleryActivity.launch(gallery)
             }
 
@@ -145,6 +146,7 @@ class AddItemActivity : BaseActivity() {
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 binding.activityAddItemSpinnerLinearLayout.removeAllViews()
+                editTextList.clear()
                 categoryName=categoryList[pos]
                 DateBase.getCategory(categoryName)?.attributes?.let { attributes = it }
                 attributes.onEach {
@@ -178,8 +180,8 @@ class AddItemActivity : BaseActivity() {
             if (name!="" && location!="" ){
                 Log.d(tag,"name:$name location:$location " )
                 val simpleDateFormat=SimpleDateFormat("yyyy.MM.dd-HH:mm:ss")
-                val saveDateFormat=SimpleDateFormat("yyyyMMDDHHmmss")
-                val date=Date(System.currentTimeMillis())
+                val timeStamp=System.currentTimeMillis()
+                val date=Date(timeStamp)
                 val ownerAccount= person.account
                 val phone = person.phone
                 var imagePath=""
@@ -212,7 +214,9 @@ class AddItemActivity : BaseActivity() {
                     }
                 }
 
-                val entityItem=EntityItem(name = name,
+                val entityItem=EntityItem(
+                    id = -1,
+                    name = name,
                     category = categoryName,
                     location= location,
                     time= time,
@@ -224,10 +228,10 @@ class AddItemActivity : BaseActivity() {
                     attributes= json,
                     description = description,
                     comments = commentsJson )
-
-                DateBase.insertItem(entityItem,file)
+                //TODO:millis
+                DateBase.addItem(entityItem,file,timeStamp/1000)
                 Toast.makeText(this,"成功提交！",Toast.LENGTH_SHORT).show()
-                MainActivity.addEntityItem=entityItem
+                //MainActivity.addEntityItem=entityItem
                 val intent=Intent()
                 /*
                 intent.run {
@@ -240,9 +244,6 @@ class AddItemActivity : BaseActivity() {
                 }
 
                  */
-                val category=DateBase.getCategory(categoryName)
-                category?.notifyItemAdd(entityItem)
-                DateBase.notifyMyItemAdd(entityItem)
                 setResult(RESULT_OK,intent)
                 finish()
             }else{
