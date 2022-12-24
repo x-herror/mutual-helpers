@@ -18,7 +18,6 @@ const FORMAT = "2006.01.02-15:04:05"
 var timeStamp int64 = 0
 
 func main() {
-
 	router := gin.Default()
 	//router.GET("/images/:imageName", getImage)
 	router.GET("/update", handleUpdate)
@@ -33,7 +32,6 @@ func main() {
 	router.POST("/avatars", addAvatar)
 
 	router.DELETE("/items", deleteItem)
-
 	/*
 		router.GET("/categories",getCategories)
 		router.POST("/categories",addCategory)
@@ -48,15 +46,13 @@ func main() {
 		router.DELETE("/waitpersons",deleteWaitPerson)
 
 	*/
-
 	router.Run()
 	models.Close()
 }
 
 func handleUpdate(c *gin.Context) {
-	t, _ := strconv.Atoi(c.Query("timeStamp"))
-	t64 := int64(t)
-	if timeStamp > t64 {
+	t, _ := strconv.ParseInt(c.Query("timeStamp"), 10, 64)
+	if timeStamp > t {
 		//TODO
 	} else {
 		c.JSON(http.StatusOK, gin.H{"update": "not"})
@@ -91,8 +87,11 @@ func addItem(c *gin.Context) {
 	if err := c.BindJSON(&prod); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 	} else {
-		models.AddItem(prod)
+		id := models.AddItem(prod)
+		prod.Id = int(id)
+		log.Println("[DEBUG] add item id=", id)
 		setTimeStamp(prod.Time)
+		c.IndentedJSON(http.StatusOK, prod)
 	}
 }
 
@@ -156,7 +155,7 @@ func deleteItem(c *gin.Context) {
 		fmt.Println("Err", err.Error())
 	}
 	setTimeStamp(time.Now().Format(FORMAT))
-	//TODO:item.ImagePath
+	//TODO:delete item image
 }
 
 func addCategory(c *gin.Context) {
@@ -166,6 +165,7 @@ func addCategory(c *gin.Context) {
 func setTimeStamp(t string) {
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	tt, _ := time.ParseInLocation(FORMAT, t, loc)
+	//TODO:millis
 	timeStamp = tt.Unix()
-	log.Println("update time:", timeStamp)
+	log.Println("[DEBUG] update timeStamp=", timeStamp)
 }

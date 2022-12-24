@@ -14,13 +14,14 @@ type Item struct {
 	Category     string `json:"category"`
 	Location     string `json:"location"`
 	Time         string `json:"time"`
-	ImagePath    string `json:"imagePath"`
+	ImageName    string `json:"imageName"`
 	ImageWidth   int    `json:"imageWidth"`
 	ImageHeight  int    `json:"imageHeight"`
 	Phone        string `json:"phone"`
 	OwnerAccount string `json:"ownerAccount"`
 	Attributes   string `json:"attributes"`
 	Description  string `json:"description"`
+	Comments     string `json:"comments"`
 }
 
 type Test struct {
@@ -35,13 +36,14 @@ CREATE TABLE items(
     `category` VARCHAR(255) NOT NULL,
     `location` VARCHAR(255) NOT NULL,
     `time` VARCHAR(255) NOT NULL,
-    `imagePath` VARCHAR(255) NOT NULL,
+    `imageName` VARCHAR(255) NOT NULL,
     `imageWidth` INT NOT NULL,
     `imageHeight` INT NOT NULL,
     `phone` VARCHAR(255) NOT NULL,
     `ownerAccount` VARCHAR(255) NOT NULL,
     `attributes` VARCHAR(255) NOT NULL,
-    `description` VARCHAR(255) NOT NULL
+    `description` VARCHAR(255) NOT NULL,
+	`comments` VARCHAR(255) NOT NULL
 ) ;
 */
 func init() {
@@ -66,7 +68,7 @@ func GetItems() []Item {
 	for results.Next() {
 		var prod Item
 		// for each row, scan into the Product struct
-		err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImagePath, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description)
+		err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImageName, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description, &prod.Comments)
 		if err != nil {
 			panic(any(err.Error())) // proper error handling instead of panic in your app
 		}
@@ -89,7 +91,7 @@ func GetItem(category string) *Item {
 	}
 
 	if results.Next() {
-		err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImagePath, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description)
+		err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImageName, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description, &prod.Comments)
 		if err != nil {
 			return nil
 		}
@@ -101,27 +103,31 @@ func GetItem(category string) *Item {
 	return prod
 }
 
-func AddItem(item Item) {
-	insert, err := db.Query(
-		"INSERT INTO items (name,category,location,time,imagePath,imageWidth,imageHeight,phone,ownerAccount,attributes,description) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-		item.Name, item.Category, item.Location, item.Time, item.ImagePath, item.ImageWidth, item.ImageHeight, item.Phone, item.OwnerAccount, item.Attributes, item.Description)
+func AddItem(item Item) int64 {
+	insert, err := db.Exec(
+		"INSERT INTO items (name,category,location,time,imageName,imageWidth,imageHeight,phone,ownerAccount,attributes,description,comments) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+		item.Name, item.Category, item.Location, item.Time, item.ImageName, item.ImageWidth, item.ImageHeight, item.Phone, item.OwnerAccount, item.Attributes, item.Description, item.Comments)
 
 	// if there is an error inserting, handle it
 	if err != nil {
 		panic(any(err.Error()))
 	}
+	id, err := insert.LastInsertId()
+	if err != nil {
 
-	defer insert.Close()
-
+	}
+	return id
 }
 
 func DeleteItem(id int) (*Item, error) {
 	prod := &Item{}
 	results, err := db.Query("SELECT * FROM items where id=?", id)
 
-	err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImagePath, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description)
-	if err != nil {
-		return prod, err
+	for results.Next() {
+		err = results.Scan(&prod.Id, &prod.Name, &prod.Category, &prod.Location, &prod.Time, &prod.ImageName, &prod.ImageWidth, &prod.ImageHeight, &prod.Phone, &prod.OwnerAccount, &prod.Attributes, &prod.Description, &prod.Comments)
+		if err != nil {
+			return prod, err
+		}
 	}
 
 	_, err = db.Query("DELETE FROM items where id=?", id)
