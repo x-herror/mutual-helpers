@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,20 +36,13 @@ class AddCategoryActivity : AppCompatActivity() {
         val adapter=CategoryAdapter(categoryList)
         RV.adapter=adapter
         binding.actvityAddCategoryFab.setOnClickListener {
-            // Use the Builder class for convenient dialog construction
             val builder = AlertDialog.Builder(this)
-            // Get the layout inflater
             val inflater: LayoutInflater = this.layoutInflater
-            // Inflate the custom layout
             val view = inflater.inflate(R.layout.dialog_add_category, null)
-            // Set the custom layout as the view for the dialog
             builder.setView(view)
-            // Set the title of the dialog
             builder.setTitle("Enter Name and Attributes")
-            // Get the input from the EditTexts
             val nameInput = view.findViewById<EditText>(R.id.dialog_add_category_name_input)
             val attributesInput = view.findViewById<EditText>(R.id.dialog_add_category_attributes_input)
-            // Set the positive button to commit the input
             builder.setPositiveButton("Commit") { _, _ ->
                 val name = nameInput.text.toString()
                 val attributes = attributesInput.text.toString()
@@ -85,17 +79,20 @@ class AddCategoryActivity : AppCompatActivity() {
                 val position=viewHolder.adapterPosition
                 val category =categoryList[position]
                 val selectDialog = AlertDialog.Builder(parent.context).run {
-                    //TODO:assert itemList is empty
                     setTitle("DELETE!")
-                    setMessage("确定删除?")
+                    setMessage("DELETE?")
                     setCancelable(false)
-                    setPositiveButton("删除!"){
+                    setPositiveButton("Commit!"){
                             dialog,which->
-                        categoryList.remove(category)
-                        super.notifyItemRemoved(position)
-                        DateBase.categorydb.remove(category.name)
+                        if(category.itemList.isEmpty()){
+                            categoryList.remove(category)
+                            super.notifyItemRemoved(position)
+                            DateBase.categorydb.remove(category.name)
+                        }else{
+                            Toast.makeText(context,"category has items!",Toast.LENGTH_SHORT).show()
+                        }
                     }
-                    setNegativeButton("算了."){
+                    setNegativeButton("Cancel."){
                             dialog,which->
                     }
                     show()

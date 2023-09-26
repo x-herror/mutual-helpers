@@ -24,6 +24,7 @@ class Category(var name:String="",var attributes:ArrayList<String>) {
         //TODO:模糊搜索,ES,轻量NN
         val array=ArrayList<EntityItem>()
         val useArray = MutableList<Boolean>(itemList.size) { false }
+        //匹配每个字符串:显示屏->显,示,屏,显示,示屏,显示屏
         for (i :Int in searchString.length downTo 1){
             for (j :Int in 0 until  (searchString.length-i+1)){
                 val subSearchString=searchString.substring(j,j+i)

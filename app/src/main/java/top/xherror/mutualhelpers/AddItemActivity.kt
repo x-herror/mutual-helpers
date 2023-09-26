@@ -60,6 +60,7 @@ class AddItemActivity : BaseActivity() {
                 ), 0
             )
         }
+
         //相册事件回调
         val toGalleryActivity =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -261,26 +262,6 @@ class AddItemActivity : BaseActivity() {
         BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
     }
 
-    private fun saveBitmap(name: String, bm: Bitmap, mContext: Context):String {
-
-        Log.d("SaveBitmap", "Ready to save bitmap")
-        val targetPath = getFileDir("bitmaps")
-        val saveFile = File(targetPath, name)
-        try {
-            val saveImgOut = FileOutputStream(saveFile)
-            bm.compress(Bitmap.CompressFormat.JPEG, 80, saveImgOut)
-            //存储完成后需要清除相关的进程
-            saveImgOut.flush()
-            saveImgOut.close()
-            Log.d("SaveBitmap", "The bitmap is save to your phone!")
-            Log.d("SaveBitmap", "Save Path=${saveFile.absolutePath}")
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-        }
-        return saveFile.absolutePath
-
-    }
-
     private fun openCamera():Intent{
         Log.d("CreatePicture", "Ready to create picture")
         val targetPath = getFileDir("camera")
@@ -315,6 +296,7 @@ class AddItemActivity : BaseActivity() {
         return path
     }
 
+    /*
     @SuppressLint("Range")
     fun getFileName(uri: Uri): String {
         var result=""
@@ -347,6 +329,28 @@ class AddItemActivity : BaseActivity() {
         }
         return result
     }
+
+    private fun saveBitmap(name: String, bm: Bitmap, mContext: Context):String {
+
+        Log.d("SaveBitmap", "Ready to save bitmap")
+        val targetPath = getFileDir("bitmaps")
+        val saveFile = File(targetPath, name)
+        try {
+            val saveImgOut = FileOutputStream(saveFile)
+            bm.compress(Bitmap.CompressFormat.JPEG, 80, saveImgOut)
+            //存储完成后需要清除相关的进程
+            saveImgOut.flush()
+            saveImgOut.close()
+            Log.d("SaveBitmap", "The bitmap is save to your phone!")
+            Log.d("SaveBitmap", "Save Path=${saveFile.absolutePath}")
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+        }
+        return saveFile.absolutePath
+
+    }
+
+     */
 
 }
 
