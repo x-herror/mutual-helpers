@@ -1,10 +1,10 @@
 
 ## 概述
-CS3331-1-软件工程大作业，参考《第一行代码 第三版》
+CS3331-1-软件工程大作业，参考《第一行代码 第三版》，默认账号admin00，密码123456
 
-[主文件](https://github.com/gxherror/MutualHelpers/blob/main/app/src/main/java/top/xherror/mutualhelpers/MainActivity.kt)
+[主文件](https://github.com/x-herror/MutualHelpers/blob/main/app/src/main/java/top/xherror/mutualhelpers/MainActivity.kt)
 
-[APP](https://github.com/gxherror/MutualHelpers/blob/main/app/release/app-release.apk)
+[APP](https://github.com/x-herror/MutualHelpers/blob/main/app/release/app-release.apk)
 
 [说明文档](https://xherror.top/post/se/mutual-helpers/)
 
